@@ -2,5 +2,7 @@
 <resources>
 
     <string name="app_name">Checklist</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
-        android:id="@+id/textView2"
+        android:id="@+id/text_decision"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
@@ -23,18 +23,18 @@
         android:layout_gravity="center_horizontal">
 
         <Button
+            android:id="@+id/button_ok"
+            android:text="@string/ok"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:text="OK"
-            android:id="@+id/button3"
             android:layout_weight="1"
             android:background="@drawable/yes_button"/>
 
         <Button
+            android:id="@+id/button_cancel"
+            android:text="@string/cancel"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:text="Cancel"
-            android:id="@+id/button2"
             android:layout_weight="1"
             android:background="@drawable/no_button"/>
     </LinearLayout>
