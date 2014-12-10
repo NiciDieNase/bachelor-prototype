@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="icon_active">#7A97DE</color>
+    <color name="icon_inactive">#B0B8CF</color>
+    <color name="textcolor">#000000</color>
+    <color name="background">#fafafa</color>
+</resources>
