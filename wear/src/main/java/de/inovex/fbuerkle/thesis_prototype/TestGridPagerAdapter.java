@@ -3,6 +3,7 @@ package de.inovex.fbuerkle.thesis_prototype;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.support.wearable.view.CardFragment;
 import android.support.wearable.view.FragmentGridPagerAdapter;
 
 /**
@@ -19,25 +20,39 @@ public class TestGridPagerAdapter extends FragmentGridPagerAdapter {
 
 	@Override
 	public Fragment getFragment(int row, int col) {
-		if(row != 0){
-			return null;
-		}
-		switch (col){
+		switch (row){
 			case 0:
-				return new ChecklistItemConfirmFragment("Please Confirm");
+				switch (col){
+					case 0:
+						return new ChecklistItemConfirmFragment("Please Confirm");
+					case 1:
+						return CardFragment.create("Titel", mContext.getString(R.string.lorem_ipsum));
+				}
 			case 1:
-				return new ChecklistItemDecisionFragment("Everything okay?");
+				switch (col){
+					case 0: return new ChecklistItemDecisionFragment("Everything okay?");
+				}
+			case 2:
+				switch (col){
+					case 0: return new NumberInputFragment(0);
+					case 1: return new NumberInputFragment(1);
+				}
 		}
-	return null;
+		return null;
 	}
 
 	@Override
 	public int getRowCount() {
-		return 1;
+		return 3;
 	}
 
 	@Override
 	public int getColumnCount(int i) {
-		return 2;
+		switch (i){
+			case 0: return 2;
+			case 1: return 1;
+			case 2: return 2;
+			default: return 0;
+		}
 	}
 }
