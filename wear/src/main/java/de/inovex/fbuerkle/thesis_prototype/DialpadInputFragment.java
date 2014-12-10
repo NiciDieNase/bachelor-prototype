@@ -15,7 +15,7 @@ import java.math.BigInteger;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NumberInputFragment extends Fragment implements View.OnClickListener{
+public class DialpadInputFragment extends Fragment implements View.OnClickListener{
 
 	static final int AUTO_LAYOUT = 0;
 	static final int RECT_LAYOUT = 1;
@@ -25,12 +25,12 @@ public class NumberInputFragment extends Fragment implements View.OnClickListene
 	private BigInteger value = new BigInteger("0");
 	private View layout;
 
-	public NumberInputFragment() {
+	public DialpadInputFragment() {
 		// Required empty public constructor
 		i = 0;
 	}
 
-	public NumberInputFragment(int i){
+	public DialpadInputFragment(int i){
 		this.i = i;
 	}
 

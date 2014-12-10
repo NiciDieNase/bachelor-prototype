@@ -34,9 +34,9 @@ public class TestGridPagerAdapter extends FragmentGridPagerAdapter {
 				}
 			case 2:
 				switch (col){
-					case 0: return new NumberInputFragment(0);
-					case 1: return new NumberInputFragment(1);
-					case 2: return new NumberInputFragment(2);
+					case 0: return new DialpadInputFragment(0);
+					case 1: return new DialpadInputFragment(1);
+					case 2: return new DialpadInputFragment(2);
 				}
 		}
 		return null;
