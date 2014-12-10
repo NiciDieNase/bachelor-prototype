@@ -7,18 +7,19 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
         android:layout_weight="1.0">
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:textAppearance="@android:style/TextAppearance.Small"
             android:text="####"
-            android:id="@+id/textView2"
-            android:layout_gravity="center_horizontal"/>
+            android:id="@+id/value_view"
+            android:layout_gravity="center_horizontal"
+            style="@style/TextView.Medium"/>
     </LinearLayout>
 
     <LinearLayout
@@ -127,13 +128,13 @@
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.8">
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
+        <ImageButton
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:text="&lt;-"
             android:id="@+id/button_del"
-            android:layout_weight="1"/>
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_input_delete"/>
 
         <Button
             style="?android:attr/buttonStyleSmall"
@@ -143,13 +144,20 @@
             android:id="@+id/button_0"
             android:layout_weight="1"/>
 
-        <Button
+        <!--<Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:text="OK"
             android:id="@+id/button_ok"
-            android:layout_weight="1"/>
+            android:layout_weight="1"/>-->
+        <ImageButton
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/button_ok"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:src="@drawable/ic_action_tick"/>
     </LinearLayout>
 
 </LinearLayout>

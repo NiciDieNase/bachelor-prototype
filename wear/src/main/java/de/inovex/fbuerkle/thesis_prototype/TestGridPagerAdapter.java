@@ -36,6 +36,7 @@ public class TestGridPagerAdapter extends FragmentGridPagerAdapter {
 				switch (col){
 					case 0: return new NumberInputFragment(0);
 					case 1: return new NumberInputFragment(1);
+					case 2: return new NumberInputFragment(2);
 				}
 		}
 		return null;
@@ -51,7 +52,7 @@ public class TestGridPagerAdapter extends FragmentGridPagerAdapter {
 		switch (i){
 			case 0: return 2;
 			case 1: return 1;
-			case 2: return 2;
+			case 2: return 3;
 			default: return 0;
 		}
 	}
