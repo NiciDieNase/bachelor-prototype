@@ -62,7 +62,7 @@ public class TestActivity extends Activity implements ChecklistFragment.OnCheckl
 		Notification.Builder builder = new Notification.Builder(this)
 				.setContentTitle("Checklist")
 				.setContentText("continue")
-				.setSmallIcon(R.drawable.generic_confirmation_00163)
+//				.setSmallIcon(R.drawable.generic_confirmation_00163)
 				.addAction(restart)
 			.extend(new Notification.WearableExtender()
 					.setContentAction(0));

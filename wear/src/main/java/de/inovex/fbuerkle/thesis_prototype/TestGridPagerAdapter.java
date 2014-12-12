@@ -21,6 +21,8 @@ public class TestGridPagerAdapter extends FragmentGridPagerAdapter {
 	@Override
 	public Fragment getFragment(int row, int col) {
 		switch (row){
+
+			// 1st Row
 			case 0:
 				switch (col){
 					case 0:
@@ -28,10 +30,14 @@ public class TestGridPagerAdapter extends FragmentGridPagerAdapter {
 					case 1:
 						return CardFragment.create("Titel", mContext.getString(R.string.lorem_ipsum));
 				}
+
+			// 2nd Row
 			case 1:
 				switch (col){
 					case 0: return new ChecklistItemDecisionFragment("Everything okay?");
 				}
+
+			// 3rd Row
 			case 2:
 				switch (col){
 					case 0: return new DialpadInputFragment(0);
