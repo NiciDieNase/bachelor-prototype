@@ -8,4 +8,6 @@
     <dimen name="text_size">13sp</dimen>
     <dimen name="text_margin">22dp</dimen>
     <dimen name="left_margin">30dp</dimen>
+    <dimen name="triangle_button_size_1">70dp</dimen>
+    <dimen name="triangle_button_size_2">110dp</dimen>
 </resources>
