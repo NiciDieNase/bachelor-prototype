@@ -1,7 +1,7 @@
 package de.inovex.fbuerkle.thesis_prototype;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +20,7 @@ import com.google.android.gms.wearable.Wearable;
 import de.inovex.fbuerkle.thesis_prototype.model.Checklist;
 
 
-public class DataItemTestActivity extends ActionBarActivity implements View.OnClickListener {
+public class DataItemTestActivity extends Activity implements View.OnClickListener {
 
 	private static final String TAG = "de.inovex.fbuerkle.checklist";
 	public final String PATH_PREFIX = "/de.inovex/checklist/";

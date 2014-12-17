@@ -1,7 +1,7 @@
 package de.inovex.fbuerkle.thesis_prototype;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,16 +11,12 @@ import android.widget.ListView;
 import com.activeandroid.query.Select;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.wearable.DataApi;
-import com.google.android.gms.wearable.PutDataMapRequest;
-import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
 import de.inovex.fbuerkle.thesis_prototype.model.Checklist;
 
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener {
+public class MainActivity extends Activity implements View.OnClickListener {
 
 	private static final String TAG = "de.inovex.fbuerkle.checklist";
 	public final String PATH_PREFIX = "/de.inovex/checklist/";
@@ -30,10 +26,15 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
 	public MainActivity(){
 		super();
-		this.currentChecklist = new Select().from(Checklist.class).where("name = Test").executeSingle();
+		this.currentChecklist = new Select()
+				.from(Checklist.class)
+				.where("Name = ?","Test")
+				.executeSingle();
 
 		if(currentChecklist == null){
-
+			currentChecklist = new Checklist();
+			currentChecklist.name = "Test";
+			currentChecklist.save();
 		}
 	}
 
@@ -113,12 +114,4 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 		}
 	}
 
-	private void updateDateItem(String item) {
-		PutDataMapRequest dataMap = PutDataMapRequest.create(this.PATH_PREFIX + "item");
-		dataMap.getDataMap().putString("item",item);
-
-		PutDataRequest request = dataMap.asPutDataRequest();
-		PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
-				.putDataItem(mGoogleApiClient,request);
-	}
 }

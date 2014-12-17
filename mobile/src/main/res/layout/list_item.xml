@@ -6,7 +6,7 @@
               android:padding="@dimen/default_padding">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:text="Type"
         android:id="@+id/tv_type"
@@ -21,7 +21,14 @@
         android:text="Test"
         android:id="@+id/tv_title"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="118dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_toEndOf="@+id/tv_type"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Options"
+        android:id="@+id/tv_options"
+        android:layout_alignBottom="@+id/tv_title"
+        android:layout_alignParentEnd="true"/>
 </RelativeLayout>

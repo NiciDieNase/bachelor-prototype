@@ -25,6 +25,7 @@ public class ChecklistAdapter extends BaseAdapter {
 	static class ViewHolder{
 		TextView titelView;
 		TextView typeView;
+		TextView optionsView;
 	}
 
 	public ChecklistAdapter(Context mContext, Checklist checklist){
@@ -56,6 +57,7 @@ public class ChecklistAdapter extends BaseAdapter {
 			viewHolder = new ViewHolder();
 			viewHolder.titelView = (TextView) convertView.findViewById(R.id.tv_title);
 			viewHolder.typeView = (TextView) convertView.findViewById(R.id.tv_type);
+			viewHolder.optionsView = (TextView) convertView.findViewById(R.id.tv_options);
 
 			convertView.setTag(viewHolder);
 		} else {
@@ -63,15 +65,18 @@ public class ChecklistAdapter extends BaseAdapter {
 		}
 
 		String type = "";
+		String options = "";
 		ChecklistItem item = checklist.items.get(position);
 		if(item.getClass().equals(DecisionItem.class)){
-			type = "Descision";
+			type = "Decision";
+			options = ((DecisionItem) item).greenOption + " / " +((DecisionItem) item).redOption;
 		} else if(item.getClass().equals(CheckItem.class)){
 			type = "Check";
 		}
 
 		viewHolder.titelView.setText(item.title);
 		viewHolder.typeView.setText(type);
+		viewHolder.optionsView.setText(options);
 		return convertView;
 	}
 }

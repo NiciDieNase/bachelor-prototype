@@ -38,7 +38,7 @@ public class NewItemFragment extends DialogFragment{
 				layout = inflater.inflate(R.layout.create_checkitem, null);
 				break;
 			case Descision:
-				layout = inflater.inflate(R.layout.create_descisionitem,null);
+				layout = inflater.inflate(R.layout.create_decisionitem,null);
 			case ValueSelect:
 				// TODO implement new Value-Select
 				break;

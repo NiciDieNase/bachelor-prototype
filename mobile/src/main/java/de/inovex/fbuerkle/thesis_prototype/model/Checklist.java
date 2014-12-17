@@ -12,6 +12,7 @@ import java.util.List;
 public class Checklist extends Model {
 	@Column(name = "items")
 	public List<ChecklistItem> items;
+
 	@Column(name = "Name")
 	public String name;
 
