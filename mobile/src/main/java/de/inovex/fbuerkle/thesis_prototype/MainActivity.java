@@ -1,12 +1,14 @@
 package de.inovex.fbuerkle.thesis_prototype;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.google.android.gms.common.ConnectionResult;
@@ -16,7 +18,7 @@ import com.google.android.gms.wearable.Wearable;
 import de.inovex.fbuerkle.thesis_prototype.model.Checklist;
 
 
-public class MainActivity extends Activity implements View.OnClickListener {
+public class MainActivity extends Activity{
 
 	private static final String TAG = "de.inovex.fbuerkle.checklist";
 	public final String PATH_PREFIX = "/de.inovex/checklist/";
@@ -42,10 +44,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-
-		findViewById(R.id.btn_descisionitem).setOnClickListener(this);
-		findViewById(R.id.btn_newcheckitem).setOnClickListener(this);
+		setContentView(	R.layout.activity_main);
 
 		ListView listView = (ListView) findViewById(R.id.listView);
 		listView.setAdapter(new ChecklistAdapter(this,currentChecklist));
@@ -79,39 +78,40 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_main, menu);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 
-		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_settings) {
-			return true;
+		switch (id){
+			case R.id.action_add_item:
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setTitle("Pick Item-Type")
+						.setItems(R.array.item_types,new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int position) {
+								switch (position){
+									case 0:
+										NewItemFragment cf = new NewItemFragment(ItemTypes.Check);
+										cf.show(getFragmentManager(),"NewCheckItemFragment");
+										break;
+									case 1:
+										NewItemFragment df = new NewItemFragment(ItemTypes.Descision);
+										df.show(getFragmentManager(), "NewDescisionItemFragment");
+										break;
+									default:
+										Toast.makeText(MainActivity.this,"Not Implemented",Toast.LENGTH_SHORT).show();
+								}
+							}
+						});
+				builder.show();
+				return true;
+			case R.id.action_settings:
+				return true;
 		}
-
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()){
-			case R.id.btn_newcheckitem:
-				NewItemFragment cf = new NewItemFragment(ItemTypes.Check);
-				cf.show(getFragmentManager(),"NewCheckItemFragment");
-				break;
-			case R.id.btn_descisionitem:
-				NewItemFragment df = new NewItemFragment(ItemTypes.Descision);
-				df.show(getFragmentManager(), "NewDescisionItemFragment");
-				break;
-			default:
-				Log.d(TAG, "Unhandled Click");
-				break;
-		}
 	}
 
 }

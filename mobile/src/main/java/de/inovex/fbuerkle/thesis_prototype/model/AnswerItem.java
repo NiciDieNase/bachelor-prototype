@@ -11,6 +11,8 @@ import java.util.Date;
  */
 @Table(name = "AnswerItems")
 public class AnswerItem extends Model{
+	@Column(name = "Question")
+	ChecklistItem question;
 	@Column
 	int sessionID;
 	@Column

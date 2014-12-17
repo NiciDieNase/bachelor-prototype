@@ -92,6 +92,6 @@ public class NewItemFragment extends DialogFragment{
 			}
 		});
 
-	return  builder.create();
+	return builder.create();
 	}
 }
