@@ -11,7 +11,12 @@ import java.util.List;
 
 abstract public class ChecklistItem extends Model {
 	@Column
-	public ChecklistItem nextItem;
-	@Column
 	public List<AnswerItem> answers;
+	@Column
+	public String title;
+
+	@Override
+	public String toString(){
+		return this.title;
+	}
 }

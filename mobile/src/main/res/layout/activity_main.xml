@@ -8,28 +8,35 @@
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 tools:context=".MainActivity">
 
-    <TextView
-        android:text="@string/hello_world"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/editText" />
+        android:layout_alignParentEnd="true"
+        android:padding="5dp"
+        android:id="@+id/linearLayout">
 
-    <EditText
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Check-Item"
+            android:id="@+id/btn_newcheckitem"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Descision Item"
+            android:id="@+id/btn_descisionitem"/>
+    </LinearLayout>
+
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText"
-        android:layout_alignParentTop="true"
+        android:layout_height="fill_parent"
+        android:id="@+id/listView"
+        android:layout_below="@+id/linearLayout"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/button_submit"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Submit"
-        android:id="@+id/button_submit"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"/>
+        android:drawSelectorOnTop="false"
+        android:headerDividersEnabled="false"
+        android:footerDividersEnabled="false"/>
 
 </RelativeLayout>

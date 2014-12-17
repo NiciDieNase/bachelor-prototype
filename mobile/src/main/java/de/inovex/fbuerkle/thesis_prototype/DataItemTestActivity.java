@@ -6,9 +6,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
+import android.widget.EditText;
+import android.widget.TextView;
 
-import com.activeandroid.query.Select;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -20,22 +20,13 @@ import com.google.android.gms.wearable.Wearable;
 import de.inovex.fbuerkle.thesis_prototype.model.Checklist;
 
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener {
+public class DataItemTestActivity extends ActionBarActivity implements View.OnClickListener {
 
 	private static final String TAG = "de.inovex.fbuerkle.checklist";
 	public final String PATH_PREFIX = "/de.inovex/checklist/";
 	private GoogleApiClient mGoogleApiClient;
 
-	public Checklist currentChecklist;
-
-	public MainActivity(){
-		super();
-		this.currentChecklist = new Select().from(Checklist.class).where("name = Test").executeSingle();
-
-		if(currentChecklist == null){
-
-		}
-	}
+	public Checklist currentChecklist = new Checklist();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +34,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		findViewById(R.id.btn_descisionitem).setOnClickListener(this);
-		findViewById(R.id.btn_newcheckitem).setOnClickListener(this);
-
-		ListView listView = (ListView) findViewById(R.id.listView);
-		listView.setAdapter(new ChecklistAdapter(this,currentChecklist));
+		findViewById(R.id.btn_submit).setOnClickListener(this);
 
 		mGoogleApiClient = new GoogleApiClient.Builder(this)
         .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
@@ -99,13 +86,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()){
-			case R.id.btn_newcheckitem:
-				NewItemFragment cf = new NewItemFragment(ItemTypes.Check);
-				cf.show(getFragmentManager(),"NewCheckItemFragment");
-				break;
-			case R.id.btn_descisionitem:
-				NewItemFragment df = new NewItemFragment(ItemTypes.Descision);
-				df.show(getFragmentManager(), "NewDescisionItemFragment");
+			case R.id.btn_submit:
+				EditText text = (EditText) findViewById(R.id.editText);
+				((TextView)findViewById(R.id.textView)).setText(text.getText());
+				updateDateItem(text.getText().toString());
 				break;
 			default:
 				Log.d(TAG, "Unhandled Click");

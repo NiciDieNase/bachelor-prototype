@@ -7,4 +7,8 @@ import com.activeandroid.annotation.Table;
  */
 @Table(name = "CheckItems")
 public class CheckItem extends ChecklistItem {
+
+	public CheckItem(String title) {
+		this.title = title;
+	}
 }

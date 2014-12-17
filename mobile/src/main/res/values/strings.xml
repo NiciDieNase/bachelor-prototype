@@ -4,5 +4,9 @@
     <string name="app_name">Thesis-Prototype</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="no">No</string>
+    <string name="red_option">Red Option</string>
+    <string name="green_option">Green Option</string>
+    <string name="title">Title</string>
 
 </resources>
