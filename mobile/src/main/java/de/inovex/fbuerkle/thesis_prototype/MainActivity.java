@@ -15,7 +15,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Wearable;
 
-import de.inovex.fbuerkle.thesis_prototype.model.Checklist;
+import de.inovex.fbuerkle.datamodel.model.Checklist;
 
 
 public class MainActivity extends Activity{

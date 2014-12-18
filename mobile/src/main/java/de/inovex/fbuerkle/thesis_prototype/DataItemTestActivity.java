@@ -17,7 +17,7 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
-import de.inovex.fbuerkle.thesis_prototype.model.Checklist;
+import de.inovex.fbuerkle.datamodel.model.Checklist;
 
 
 public class DataItemTestActivity extends Activity implements View.OnClickListener {

@@ -1,4 +1,4 @@
-package de.inovex.fbuerkle.thesis_prototype.model;
+package de.inovex.fbuerkle.datamodel.model;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
@@ -6,7 +6,7 @@ import com.activeandroid.annotation.Column;
 import java.util.Collections;
 import java.util.List;
 
-import de.inovex.fbuerkle.thesis_prototype.model.Questions.ChecklistItem;
+import de.inovex.fbuerkle.datamodel.model.Questions.ChecklistItem;
 
 /**
  * Created by felix on 15/12/14.

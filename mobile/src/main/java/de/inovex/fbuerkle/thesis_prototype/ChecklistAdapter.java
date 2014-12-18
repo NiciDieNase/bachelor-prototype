@@ -8,10 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import de.inovex.fbuerkle.thesis_prototype.model.Questions.CheckItem;
-import de.inovex.fbuerkle.thesis_prototype.model.Checklist;
-import de.inovex.fbuerkle.thesis_prototype.model.Questions.ChecklistItem;
-import de.inovex.fbuerkle.thesis_prototype.model.Questions.DecisionItem;
+import de.inovex.fbuerkle.datamodel.model.Questions.CheckItem;
+import de.inovex.fbuerkle.datamodel.model.Checklist;
+import de.inovex.fbuerkle.datamodel.model.Questions.ChecklistItem;
+import de.inovex.fbuerkle.datamodel.model.Questions.DecisionItem;
 
 
 /**

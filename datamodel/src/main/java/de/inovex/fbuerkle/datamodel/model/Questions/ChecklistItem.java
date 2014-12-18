@@ -1,12 +1,12 @@
-package de.inovex.fbuerkle.thesis_prototype.model.Questions;
+package de.inovex.fbuerkle.datamodel.model.Questions;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 
 import java.util.List;
 
-import de.inovex.fbuerkle.thesis_prototype.model.Answers.AnswerItem;
-import de.inovex.fbuerkle.thesis_prototype.model.Checklist;
+import de.inovex.fbuerkle.datamodel.model.Answers.AnswerItem;
+import de.inovex.fbuerkle.datamodel.model.Checklist;
 
 /**
  * Created by felix on 15/12/14.
