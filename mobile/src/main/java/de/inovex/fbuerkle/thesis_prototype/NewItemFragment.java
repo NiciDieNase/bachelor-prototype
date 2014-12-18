@@ -19,7 +19,7 @@ import de.inovex.fbuerkle.datamodel.model.Questions.DecisionItem;
 /**
  * Created by felix on 17/12/14.
  */
-public class NewItemFragment extends DialogFragment{
+public class NewItemFragment extends DialogFragment {
 
 	ItemTypes type = ItemTypes.Check;
 
@@ -55,12 +55,11 @@ public class NewItemFragment extends DialogFragment{
 				if(null != finalLayout){
 					Checklist currentChecklist =((MainActivity) getActivity()).currentChecklist;
 					ChecklistItem item = null;
-					String title
-							;
+					String title = "";
 					switch (NewItemFragment.this.type){
 						case Check:
 							title = ((EditText) finalLayout.findViewById(R.id.editText_title)).getText().toString();
-							item = new CheckItem(title);
+							item = new CheckItem();
 							break;
 						case Descision:
 							String greenText, redText;
@@ -70,13 +69,12 @@ public class NewItemFragment extends DialogFragment{
 							item = new DecisionItem(title, greenText, redText);
 							break;
 					}
-
-		if(null != item){
-			ActiveAndroid.beginTransaction();
-			try{
-				item.save();
-							currentChecklist.addCheck(item);
-							currentChecklist.save();
+					if(null != item){
+						ActiveAndroid.beginTransaction();
+						try{
+							item.title = title;
+							item.checklist = currentChecklist;
+							item.save();
 							ActiveAndroid.setTransactionSuccessful();
 						} finally {
 							ActiveAndroid.endTransaction();

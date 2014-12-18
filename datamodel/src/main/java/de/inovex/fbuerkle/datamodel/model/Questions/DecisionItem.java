@@ -1,10 +1,12 @@
 package de.inovex.fbuerkle.datamodel.model.Questions;
 
 import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
 /**
  * Created by felix on 16.12.14.
  */
+@Table(name = "DecisionItems")
 public class DecisionItem extends ChecklistItem {
 
     @Column

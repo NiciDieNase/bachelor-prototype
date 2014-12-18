@@ -2,6 +2,7 @@ package de.inovex.fbuerkle.datamodel.model.Questions;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
 import java.util.List;
 
@@ -11,16 +12,16 @@ import de.inovex.fbuerkle.datamodel.model.Checklist;
 /**
  * Created by felix on 15/12/14.
  */
-
-abstract public class ChecklistItem extends Model implements Comparable {
+@Table(name = "ChecklistItems")
+public class ChecklistItem extends Model implements Comparable {
 	@Column (name = "Title")
 	public String title;
 
 	@Column(name = "Checklist")
 	public Checklist checklist;
 
-	@Column(name = "Index")
-	public int index;
+	@Column(name = "Position")
+	public int position;
 
 	public ChecklistItem(){}
 
@@ -49,6 +50,6 @@ abstract public class ChecklistItem extends Model implements Comparable {
 	@Override
 	public int compareTo(Object another) {
 		ChecklistItem other = (ChecklistItem) another;
-		return this.index - other.index;
+		return this.position - other.position;
 	}
 }

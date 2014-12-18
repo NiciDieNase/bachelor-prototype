@@ -57,12 +57,12 @@ public class TestActivity extends Activity implements ChecklistFragment.OnCheckl
 		Intent notificationIntent = new Intent(this, TestActivity.class);
 //		notificationIntent.putExtra("CurrentRow", pager.getCurrentItem().y);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this,0,notificationIntent,0);
-		Notification.Action restart = new Notification.Action(android.R.drawable.ic_media_play,null,pendingIntent);
+		Notification.Action restart = new Notification.Action(R.drawable.transparent_icon,null,pendingIntent);
 
 		Notification.Builder builder = new Notification.Builder(this)
 				.setContentTitle("Checklist")
 				.setContentText("continue")
-//				.setSmallIcon(R.drawable.generic_confirmation_00163)
+				.setSmallIcon(R.drawable.transparent_icon)
 				.addAction(restart)
 			.extend(new Notification.WearableExtender()
 					.setContentAction(0));

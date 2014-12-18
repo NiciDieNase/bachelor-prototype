@@ -34,12 +34,12 @@ public class ChecklistAdapter extends BaseAdapter {
 	}
 	@Override
 	public int getCount() {
-		return checklist.items.size();
+		return checklist.items().size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return checklist.items.get(position);
+		return checklist.items().get(position);
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class ChecklistAdapter extends BaseAdapter {
 
 		String type = "";
 		String options = "";
-		ChecklistItem item = checklist.items.get(position);
+		ChecklistItem item = checklist.items().get(position);
 		if(item.getClass().equals(DecisionItem.class)){
 			type = "Decision";
 			options = ((DecisionItem) item).greenOption + " / " +((DecisionItem) item).redOption;
