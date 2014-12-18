@@ -11,10 +11,10 @@ import android.widget.EditText;
 
 import com.activeandroid.ActiveAndroid;
 
-import de.inovex.fbuerkle.thesis_prototype.model.CheckItem;
+import de.inovex.fbuerkle.thesis_prototype.model.Questions.CheckItem;
 import de.inovex.fbuerkle.thesis_prototype.model.Checklist;
-import de.inovex.fbuerkle.thesis_prototype.model.ChecklistItem;
-import de.inovex.fbuerkle.thesis_prototype.model.DecisionItem;
+import de.inovex.fbuerkle.thesis_prototype.model.Questions.ChecklistItem;
+import de.inovex.fbuerkle.thesis_prototype.model.Questions.DecisionItem;
 
 /**
  * Created by felix on 17/12/14.

@@ -1,4 +1,4 @@
-package de.inovex.fbuerkle.thesis_prototype.model;
+package de.inovex.fbuerkle.thesis_prototype.model.Questions;
 
 import com.activeandroid.annotation.Table;
 
@@ -7,8 +7,4 @@ import com.activeandroid.annotation.Table;
  */
 @Table(name = "CheckItems")
 public class CheckItem extends ChecklistItem {
-
-	public CheckItem(String title) {
-		this.title = title;
-	}
 }

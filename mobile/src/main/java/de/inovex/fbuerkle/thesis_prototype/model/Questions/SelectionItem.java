@@ -1,4 +1,4 @@
-package de.inovex.fbuerkle.thesis_prototype.model;
+package de.inovex.fbuerkle.thesis_prototype.model.Questions;
 
 import com.activeandroid.annotation.Column;
 

@@ -1,4 +1,4 @@
-package de.inovex.fbuerkle.thesis_prototype.model;
+package de.inovex.fbuerkle.thesis_prototype.model.Questions;
 
 import com.activeandroid.annotation.Column;
 
@@ -14,6 +14,9 @@ public class DecisionItem extends ChecklistItem {
 
 	public DecisionItem(){}
 
+	public DecisionItem(String title){
+		this(title,"Yes","No");
+	}
 	public DecisionItem(String title, String greenOption, String redOption){
 		this.title = title;
 		this.greenOption = greenOption;
