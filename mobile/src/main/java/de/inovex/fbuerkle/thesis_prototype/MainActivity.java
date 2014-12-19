@@ -3,6 +3,7 @@ package de.inovex.fbuerkle.thesis_prototype;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -108,6 +109,21 @@ public class MainActivity extends Activity{
 							}
 						});
 				builder.show();
+				return true;
+			case R.id.action_sync:
+				new AsyncTask(){
+					@Override
+					protected Object doInBackground(Object[] params) {
+						// TODO generate or update Data Items
+						return null;
+					}
+
+					@Override
+					protected void onPostExecute(Object o) {
+						super.onPostExecute(o);
+						Toast.makeText(MainActivity.this,"Sync finished",Toast.LENGTH_SHORT).show();
+					}
+				}.execute();
 				return true;
 			case R.id.action_settings:
 				return true;

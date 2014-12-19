@@ -8,8 +8,15 @@
         android:title="@string/add_items"
         android:icon="@android:drawable/ic_menu_add"/>
 
-    <item android:id="@+id/action_settings"
-          android:title="@string/action_settings"
-          android:orderInCategory="100"
-          android:showAsAction="never"/>
+    <item
+        android:id="@+id/action_sync"
+        android:showAsAction="always"
+        android:title="Sync"
+        android:icon="@android:drawable/ic_menu_upload"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"/>
 </menu>
