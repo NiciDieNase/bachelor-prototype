@@ -15,13 +15,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Wearable;
 
-import de.inovex.fbuerkle.datamodel.model.Checklist;
+import de.inovex.fbuerkle.datamodel.Checklist;
 
 
 public class MainActivity extends Activity{
 
 	private static final String TAG = "de.inovex.fbuerkle.checklist";
-	public final String PATH_PREFIX = "/de.inovex/checklist/";
 	private GoogleApiClient mGoogleApiClient;
 
 	public Checklist currentChecklist;
@@ -47,7 +46,9 @@ public class MainActivity extends Activity{
 		setContentView(	R.layout.activity_main);
 
 		ListView listView = (ListView) findViewById(R.id.listView);
-		listView.setAdapter(new ChecklistAdapter(this,currentChecklist));
+		ChecklistAdapter adapter = new ChecklistAdapter(this, currentChecklist);
+		listView.setAdapter(adapter);
+		listView.setOnItemClickListener(adapter);
 
 		mGoogleApiClient = new GoogleApiClient.Builder(this)
         .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {

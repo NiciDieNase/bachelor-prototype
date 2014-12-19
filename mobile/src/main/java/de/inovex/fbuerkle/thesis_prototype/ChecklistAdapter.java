@@ -1,42 +1,45 @@
 package de.inovex.fbuerkle.thesis_prototype;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import de.inovex.fbuerkle.datamodel.model.Questions.CheckItem;
-import de.inovex.fbuerkle.datamodel.model.Checklist;
-import de.inovex.fbuerkle.datamodel.model.Questions.ChecklistItem;
-import de.inovex.fbuerkle.datamodel.model.Questions.DecisionItem;
+import de.inovex.fbuerkle.datamodel.Questions.CheckItem;
+import de.inovex.fbuerkle.datamodel.Checklist;
+import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
+import de.inovex.fbuerkle.datamodel.Questions.DecisionItem;
 
 
 /**
  * Created by felix on 17/12/14.
  */
-public class ChecklistAdapter extends BaseAdapter {
+public class ChecklistAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
 
 	private Checklist checklist;
 	private Context mContext;
 
 	static class ViewHolder{
+
 		TextView titelView;
 		TextView typeView;
 		TextView optionsView;
 	}
-
 	public ChecklistAdapter(Context mContext, Checklist checklist){
 		this.mContext = mContext;
 		this.checklist = checklist;
 	}
+
 	@Override
 	public int getCount() {
 		return checklist.items().size();
 	}
-
 	@Override
 	public Object getItem(int position) {
 		return checklist.items().get(position);
@@ -78,5 +81,23 @@ public class ChecklistAdapter extends BaseAdapter {
 		viewHolder.typeView.setText(type);
 		viewHolder.optionsView.setText(options);
 		return convertView;
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		builder.setMessage(mContext.getString(R.string.do_you_want_to_delete_this_item))
+				.setTitle(mContext.getString(R.string.confirm_delete))
+				.setPositiveButton("Delete", new DialogInterface.OnClickListener(){
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						ChecklistItem item = checklist.items().get(position);
+						checklist.items().remove(position);
+						item.delete();
+						ChecklistAdapter.this.notifyDataSetChanged();
+					}
+				})
+				.setNegativeButton("Cancel",null);
+		builder.show();
 	}
 }

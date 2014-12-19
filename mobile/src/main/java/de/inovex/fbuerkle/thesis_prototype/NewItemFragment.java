@@ -11,10 +11,10 @@ import android.widget.EditText;
 
 import com.activeandroid.ActiveAndroid;
 
-import de.inovex.fbuerkle.datamodel.model.Questions.CheckItem;
-import de.inovex.fbuerkle.datamodel.model.Checklist;
-import de.inovex.fbuerkle.datamodel.model.Questions.ChecklistItem;
-import de.inovex.fbuerkle.datamodel.model.Questions.DecisionItem;
+import de.inovex.fbuerkle.datamodel.Questions.CheckItem;
+import de.inovex.fbuerkle.datamodel.Checklist;
+import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
+import de.inovex.fbuerkle.datamodel.Questions.DecisionItem;
 
 /**
  * Created by felix on 17/12/14.
