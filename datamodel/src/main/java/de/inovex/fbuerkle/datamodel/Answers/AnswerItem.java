@@ -1,4 +1,4 @@
-package de.inovex.fbuerkle.datamodel.model.Answers;
+package de.inovex.fbuerkle.datamodel.Answers;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
@@ -6,7 +6,7 @@ import com.activeandroid.annotation.Table;
 
 import java.util.Date;
 
-import de.inovex.fbuerkle.datamodel.model.Questions.ChecklistItem;
+import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
 
 /**
  * Created by felix on 15/12/14.

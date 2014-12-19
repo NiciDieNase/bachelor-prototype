@@ -1,4 +1,4 @@
-package de.inovex.fbuerkle.datamodel.model.Questions;
+package de.inovex.fbuerkle.datamodel.Questions;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;

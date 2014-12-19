@@ -1,4 +1,4 @@
-package de.inovex.fbuerkle.datamodel.model.Answers;
+package de.inovex.fbuerkle.datamodel.Answers;
 
 import com.activeandroid.annotation.Column;
 

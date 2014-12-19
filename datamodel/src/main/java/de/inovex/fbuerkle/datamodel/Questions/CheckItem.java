@@ -1,8 +1,8 @@
-package de.inovex.fbuerkle.datamodel.model.Questions;
+package de.inovex.fbuerkle.datamodel.Questions;
 
 import com.activeandroid.annotation.Table;
 
-import de.inovex.fbuerkle.datamodel.model.Checklist;
+import de.inovex.fbuerkle.datamodel.Checklist;
 
 /**
  * Created by felix on 15/12/14.

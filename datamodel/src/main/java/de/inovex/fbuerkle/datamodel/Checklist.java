@@ -1,4 +1,4 @@
-package de.inovex.fbuerkle.datamodel.model;
+package de.inovex.fbuerkle.datamodel;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.inovex.fbuerkle.datamodel.model.Questions.CheckItem;
-import de.inovex.fbuerkle.datamodel.model.Questions.ChecklistItem;
-import de.inovex.fbuerkle.datamodel.model.Questions.DecisionItem;
-import de.inovex.fbuerkle.datamodel.model.Questions.SelectionItem;
+import de.inovex.fbuerkle.datamodel.Questions.CheckItem;
+import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
+import de.inovex.fbuerkle.datamodel.Questions.DecisionItem;
+import de.inovex.fbuerkle.datamodel.Questions.SelectionItem;
 
 
 /**
