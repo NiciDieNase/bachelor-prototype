@@ -14,6 +14,10 @@ import android.widget.Toast;
 import com.activeandroid.query.Select;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
 import de.inovex.fbuerkle.datamodel.Checklist;
@@ -22,6 +26,11 @@ import de.inovex.fbuerkle.datamodel.Checklist;
 public class MainActivity extends Activity{
 
 	private static final String TAG = "de.inovex.fbuerkle.checklist";
+
+	public GoogleApiClient getmGoogleApiClient() {
+		return mGoogleApiClient;
+	}
+
 	private GoogleApiClient mGoogleApiClient;
 
 	public Checklist currentChecklist;
@@ -100,7 +109,7 @@ public class MainActivity extends Activity{
 										cf.show(getFragmentManager(),"NewCheckItemFragment");
 										break;
 									case 1:
-										NewItemFragment df = new NewItemFragment(ItemTypes.Descision);
+										NewItemFragment df = new NewItemFragment(ItemTypes.Decision);
 										df.show(getFragmentManager(), "NewDescisionItemFragment");
 										break;
 									default:
@@ -114,14 +123,18 @@ public class MainActivity extends Activity{
 				new AsyncTask(){
 					@Override
 					protected Object doInBackground(Object[] params) {
-						// TODO generate or update Data Items
+						PutDataMapRequest dataMap = PutDataMapRequest.create("/checklist/"+currentChecklist.name.toLowerCase());
+						dataMap.getDataMap().putString("name",currentChecklist.name);
+						dataMap.getDataMap().putString("description",currentChecklist.description);
+						PutDataRequest request = dataMap.asPutDataRequest();
+						PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleApiClient,request);
 						return null;
 					}
 
 					@Override
 					protected void onPostExecute(Object o) {
 						super.onPostExecute(o);
-						Toast.makeText(MainActivity.this,"Sync finished",Toast.LENGTH_SHORT).show();
+						Toast.makeText(MainActivity.this,"Current Checklist Synced",Toast.LENGTH_SHORT).show();
 					}
 				}.execute();
 				return true;

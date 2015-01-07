@@ -81,15 +81,6 @@ public class ChecklistActivity extends Activity implements DataApi.DataListener,
 				Log.d(TAG, "DataItem deleted: " + event.getDataItem().getUri());
 			} else if (event.getType() == DataEvent.TYPE_CHANGED) {
 				Log.d(TAG, "DataItem changed: " + event.getDataItem().getUri());
-				DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
-				text = dataMapItem.getDataMap().getString("item");
-				this.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						mTextView.setText(ChecklistActivity.this.text);
-					}
-				});
-
 			}
 		}
 

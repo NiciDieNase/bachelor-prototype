@@ -23,6 +23,9 @@ public class ChecklistItem extends Model implements Comparable {
 	@Column(name = "Position")
 	public int position;
 
+	@Column(name = "Description")
+	public String description;
+
 	public ChecklistItem(){}
 
 	public ChecklistItem(String title){

@@ -10,6 +10,11 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.activeandroid.ActiveAndroid;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
 
 import de.inovex.fbuerkle.datamodel.Questions.CheckItem;
 import de.inovex.fbuerkle.datamodel.Checklist;
@@ -37,7 +42,7 @@ public class NewItemFragment extends DialogFragment {
 			case Check:
 				layout = inflater.inflate(R.layout.create_checkitem, null);
 				break;
-			case Descision:
+			case Decision:
 				layout = inflater.inflate(R.layout.create_decisionitem,null);
 			case ValueSelect:
 				// TODO implement new Value-Select
@@ -54,30 +59,47 @@ public class NewItemFragment extends DialogFragment {
 			public void onClick(DialogInterface dialog, int id) {
 				if(null != finalLayout){
 					Checklist currentChecklist =((MainActivity) getActivity()).currentChecklist;
+					int position = currentChecklist.items().size();
+
+					PutDataMapRequest dataMap = PutDataMapRequest.create("/checklist/"+ currentChecklist.name.toLowerCase()+"/"+position);
+					dataMap.getDataMap().putInt("position",position);
+
 					ChecklistItem item = null;
 					String title = "";
 					switch (NewItemFragment.this.type){
 						case Check:
 							title = ((EditText) finalLayout.findViewById(R.id.editText_title)).getText().toString();
 							item = new CheckItem();
+
+							dataMap.getDataMap().putString("type","CheckItem");
 							break;
-						case Descision:
+						case Decision:
 							String greenText, redText;
 							title = ((EditText) finalLayout.findViewById(R.id.editText_title)).getText().toString();
 							greenText = ((EditText) finalLayout.findViewById(R.id.editText_green)).getText().toString();
 							redText =((EditText) finalLayout.findViewById(R.id.editText_red)).getText().toString();
 							item = new DecisionItem(title, greenText, redText);
+
+							dataMap.getDataMap().putString("redText",redText);
+							dataMap.getDataMap().putString("greenText",greenText);
+							dataMap.getDataMap().putString("type","DecisionItem");
 							break;
 					}
 					if(null != item){
+						dataMap.getDataMap().putString("title",title);
 						ActiveAndroid.beginTransaction();
 						try{
 							item.title = title;
 							item.checklist = currentChecklist;
+							item.position = position;
 							item.save();
 							ActiveAndroid.setTransactionSuccessful();
 						} finally {
 							ActiveAndroid.endTransaction();
+
+							PutDataRequest request = dataMap.asPutDataRequest();
+							PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
+									.putDataItem(((MainActivity) ((MainActivity) getActivity())).getmGoogleApiClient(),request);
 						}
 					}
 				}

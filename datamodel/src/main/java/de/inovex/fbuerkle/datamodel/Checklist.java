@@ -22,6 +22,9 @@ public class Checklist extends Model {
 	@Column(name = "Name", index = true, unique = true)
 	public String name;
 
+	@Column(name = "Description")
+	public String description;
+
 	public List<ChecklistItem> items (){
 		Class[] questionClasses = {CheckItem.class, DecisionItem.class, SelectionItem.class};
 
