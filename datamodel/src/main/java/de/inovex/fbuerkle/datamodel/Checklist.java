@@ -35,4 +35,14 @@ public class Checklist extends Model {
 		Collections.sort(checklist);
 		return checklist;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		try{
+			Checklist comp = (Checklist) obj;
+			return comp.name.equals(this.name);
+		} catch (ClassCastException e){
+			return false;
+		}
+	}
 }

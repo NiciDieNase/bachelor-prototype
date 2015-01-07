@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<de.inovex.test.weartest.WearableListItemLayout
+<de.inovex.fbuerkle.thesis_prototype.WearableListItemLayout
 
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:gravity="center_vertical"
@@ -24,5 +24,4 @@
         android:textSize="@dimen/text_size"
         android:text="LoremIpsum"
         />
-
-</de.inovex.test.weartest.WearableListItemLayout>
+</de.inovex.fbuerkle.thesis_prototype.WearableListItemLayout>

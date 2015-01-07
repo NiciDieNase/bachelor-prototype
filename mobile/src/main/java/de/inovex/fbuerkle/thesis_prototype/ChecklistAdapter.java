@@ -95,6 +95,7 @@ public class ChecklistAdapter extends BaseAdapter implements AdapterView.OnItemC
 						checklist.items().remove(position);
 						item.delete();
 						ChecklistAdapter.this.notifyDataSetChanged();
+						// TODO delete DataItem
 					}
 				})
 				.setNegativeButton("Cancel",null);

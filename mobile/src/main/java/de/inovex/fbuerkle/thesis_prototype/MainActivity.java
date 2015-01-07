@@ -20,6 +20,9 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.inovex.fbuerkle.datamodel.Checklist;
 
 
@@ -123,9 +126,21 @@ public class MainActivity extends Activity{
 				new AsyncTask(){
 					@Override
 					protected Object doInBackground(Object[] params) {
-						PutDataMapRequest dataMap = PutDataMapRequest.create("/checklist/"+currentChecklist.name.toLowerCase());
-						dataMap.getDataMap().putString("name",currentChecklist.name);
-						dataMap.getDataMap().putString("description",currentChecklist.description);
+						List<Checklist> checklists =  new Select().from(Checklist.class).execute();
+						ArrayList<String> listNames = new ArrayList<String>();
+
+						for(Checklist list : checklists){
+							PutDataMapRequest dataMap = PutDataMapRequest.create("/checklists/"+list.name.toLowerCase());
+							dataMap.getDataMap().putString("name",list.name);
+							dataMap.getDataMap().putString("description",list.description);
+							dataMap.getDataMap().putString("type","Checklist");
+							PutDataRequest request = dataMap.asPutDataRequest();
+							PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleApiClient,request);
+							listNames.add(list.name);
+						}
+
+						PutDataMapRequest dataMap = PutDataMapRequest.create("/checklists");
+						dataMap.getDataMap().putStringArrayList("checklists",listNames);
 						PutDataRequest request = dataMap.asPutDataRequest();
 						PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleApiClient,request);
 						return null;
@@ -137,6 +152,9 @@ public class MainActivity extends Activity{
 						Toast.makeText(MainActivity.this,"Current Checklist Synced",Toast.LENGTH_SHORT).show();
 					}
 				}.execute();
+				return true;
+			case R.id.action_add_checklist:
+				new NewChecklistFragment().show(getFragmentManager(),"newChecklistFragment");
 				return true;
 			case R.id.action_settings:
 				return true;
