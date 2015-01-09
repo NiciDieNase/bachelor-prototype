@@ -2,8 +2,13 @@ package de.inovex.fbuerkle.thesis_prototype;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -11,12 +16,17 @@ import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 
+import de.inovex.fbuerkle.ChecklistManager;
 import de.inovex.fbuerkle.datamodel.Checklist;
 
 
 public class MainActivity extends Activity {
 
+	private boolean mBound;
+
 	private static final String TAG = "de.inovex.fbuerkle.checklist";
+
+	protected ChecklistManager mSyncService;
 
 	public Checklist currentChecklist;
 
@@ -46,6 +56,12 @@ public class MainActivity extends Activity {
 		listView.setOnItemClickListener(adapter);
 	}
 
+	@Override
+	protected void onStart() {
+		super.onStart();
+		Intent i = new Intent(this, ChecklistManager.class);
+		bindService(i,mConnection, Context.BIND_AUTO_CREATE);
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -53,6 +69,18 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.menu_main, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
+	private ServiceConnection mConnection = new ServiceConnection() {
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			ChecklistManager.SyncBinder binder = (ChecklistManager.SyncBinder) service;
+			mSyncService = binder.getService();
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			mBound = false;
+		}
+	};
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -83,6 +111,9 @@ public class MainActivity extends Activity {
 				return true;
 			case R.id.action_sync:
 				// TODO sync checklists
+				if(mBound){
+					mSyncService.syncChecklist(currentChecklist);
+				}
 				return true;
 			case R.id.action_add_checklist:
 				new NewChecklistFragment().show(getFragmentManager(), "newChecklistFragment");

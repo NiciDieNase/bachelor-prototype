@@ -3,6 +3,7 @@ package de.inovex.fbuerkle.thesis_prototype;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -42,11 +43,30 @@ public class ChecklistActivity extends Activity {
 			public void onLayoutInflated(WatchViewStub stub) {
 				WearableListView listView = (WearableListView) findViewById(R.id.wearable_list);
 				ChecklistAdapter checklistAdapter = new ChecklistAdapter(ChecklistActivity.this);
+				if(mBound){
+					checklistAdapter.updateChecklists(mSyncService.getChecklists());
+				}
 				listView.setAdapter(checklistAdapter);
 				listView.setClickListener(mClickListener);
 				Log.i(TAG, "setting adapter and click listener");
 			}
 		});
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		Intent i = new Intent(this, ChecklistManager.class);
+		bindService(i,mConnection,Context.BIND_AUTO_CREATE);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if(mBound){
+			unbindService(mConnection);
+			mBound = false;
+		}
 	}
 
 	private WearableListView.ClickListener mClickListener = new WearableListView.ClickListener() {

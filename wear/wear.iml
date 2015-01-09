@@ -90,7 +90,7 @@
     <orderEntry type="library" exported="" name="circlebutton-1.1" level="project" />
     <orderEntry type="library" exported="" name="support-v4-20.0.0" level="project" />
     <orderEntry type="library" exported="" name="wearable-1.0.0" level="project" />
-    <orderEntry type="module" module-name="shared" exported="" />
+    <orderEntry type="module" module-name="datamodel" exported="" />
   </component>
 </module>
 
