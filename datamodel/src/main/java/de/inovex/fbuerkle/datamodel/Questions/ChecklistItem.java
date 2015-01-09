@@ -17,7 +17,7 @@ import de.inovex.fbuerkle.datamodel.Checklist;
  */
 @Table(name = "ChecklistItems")
 public abstract class ChecklistItem extends Model implements Parcelable {
-	@Column (name = "Title")
+	@Column(name = "Title")
 	public String title;
 
 	@Column(name = "Checklist")
@@ -26,27 +26,28 @@ public abstract class ChecklistItem extends Model implements Parcelable {
 	@Column(name = "Description")
 	public String description;
 
-	public ChecklistItem(){}
-
-	public ChecklistItem(String title){
-		this(title,null);
+	public ChecklistItem() {
 	}
 
-	public ChecklistItem(Checklist checklist){
-		this("",checklist);
+	public ChecklistItem(String title) {
+		this(title, null);
 	}
 
-	public ChecklistItem(String title,Checklist list){
+	public ChecklistItem(Checklist checklist) {
+		this("", checklist);
+	}
+
+	public ChecklistItem(String title, Checklist list) {
 		this.title = title;
 		this.checklist = list;
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return this.title;
 	}
 
-	public List<AnswerItem> answers (){
+	public List<AnswerItem> answers() {
 		return getMany(AnswerItem.class, "Question");
 	}
 

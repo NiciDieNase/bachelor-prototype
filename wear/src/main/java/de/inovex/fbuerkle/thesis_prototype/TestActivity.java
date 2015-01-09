@@ -23,8 +23,8 @@ public class TestActivity extends Activity implements ChecklistFragment.OnCheckl
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		if(savedInstanceState != null && savedInstanceState.containsKey("CurrentRow")){
-			Log.d("Checklist","Current Row: " + savedInstanceState.get("CurrentRow"));
+		if (savedInstanceState != null && savedInstanceState.containsKey("CurrentRow")) {
+			Log.d("Checklist", "Current Row: " + savedInstanceState.get("CurrentRow"));
 		}
 
 		// Keep App active
@@ -38,15 +38,15 @@ public class TestActivity extends Activity implements ChecklistFragment.OnCheckl
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
-		savedInstanceState.putInt("CurrentRow",pager.getCurrentItem().y);
+		savedInstanceState.putInt("CurrentRow", pager.getCurrentItem().y);
 	}
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		if(savedInstanceState.containsKey("CurrentRow")){
+		if (savedInstanceState.containsKey("CurrentRow")) {
 			int row = savedInstanceState.getInt("CurrentRow");
-			pager.setCurrentItem(row, pager.getAdapter().getCurrentColumnForRow(row,0));
+			pager.setCurrentItem(row, pager.getAdapter().getCurrentColumnForRow(row, 0));
 		}
 	}
 
@@ -56,18 +56,18 @@ public class TestActivity extends Activity implements ChecklistFragment.OnCheckl
 		// create Notification to restart/continue
 		Intent notificationIntent = new Intent(this, TestActivity.class);
 //		notificationIntent.putExtra("CurrentRow", pager.getCurrentItem().y);
-		PendingIntent pendingIntent = PendingIntent.getActivity(this,0,notificationIntent,0);
-		Notification.Action restart = new Notification.Action(R.drawable.transparent_icon,null,pendingIntent);
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+		Notification.Action restart = new Notification.Action(R.drawable.transparent_icon, null, pendingIntent);
 
 		Notification.Builder builder = new Notification.Builder(this)
 				.setContentTitle("Checklist")
 				.setContentText("continue")
 				.setSmallIcon(R.drawable.transparent_icon)
 				.addAction(restart)
-			.extend(new Notification.WearableExtender()
-					.setContentAction(0));
+				.extend(new Notification.WearableExtender()
+						.setContentAction(0));
 
-					NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+		NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
 		notificationManagerCompat.notify(23, builder.build());
 	}
 
@@ -76,35 +76,35 @@ public class TestActivity extends Activity implements ChecklistFragment.OnCheckl
 	public void onConfirm() {
 		Intent i = new Intent(this, ConfirmationActivity.class).setAction(Intent.ACTION_MAIN);
 		i.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.SUCCESS_ANIMATION);
-		i.putExtra("CurrentRow",pager.getCurrentItem().y);
+		i.putExtra("CurrentRow", pager.getCurrentItem().y);
 		startActivityForResult(i, TestActivity.CONFIRMATION);
-		Log.d("Checklist","Item Confirmed");
+		Log.d("Checklist", "Item Confirmed");
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if( requestCode == TestActivity.CONFIRMATION){
-			if(data != null && data.getExtras() != null && data.getExtras().containsKey("CurrentRow")){
-				Log.d("Checklist","Current Row: " + data.getExtras().get("CurrentRow"));
+		if (requestCode == TestActivity.CONFIRMATION) {
+			if (data != null && data.getExtras() != null && data.getExtras().containsKey("CurrentRow")) {
+				Log.d("Checklist", "Current Row: " + data.getExtras().get("CurrentRow"));
 			}
-			pager.setCurrentItem(1,0,true);
+			pager.setCurrentItem(1, 0, true);
 		}
 	}
 
 	@Override
 	public void onOK() {
-		Log.d("Checklist","Item Okay");
+		Log.d("Checklist", "Item Okay");
 //		pager.setCurrentItem(0,0,true);
 	}
 
 	@Override
 	public void onCancel() {
-		Log.d("Checklist","Item Canceled");
+		Log.d("Checklist", "Item Canceled");
 //		pager.setCurrentItem(0,0,true);
 	}
 
 	@Override
 	public void onValueSelected() {
-		Log.d("Checklist","Value Selected");
+		Log.d("Checklist", "Value Selected");
 	}
 }

@@ -27,18 +27,19 @@ public class Checklist extends Model implements Parcelable {
 	@Column(name = "Description")
 	public String description;
 
-	public Checklist(){}
+	public Checklist() {
+	}
 
 	public Checklist(Parcel parcel) {
 		this.name = parcel.readString();
 		this.description = parcel.readString();
 	}
 
-	public List<ChecklistItem> items (){
+	public List<ChecklistItem> items() {
 		Class[] questionClasses = {CheckItem.class, DecisionItem.class, SelectionItem.class};
 
 		List<ChecklistItem> checklist = new ArrayList<ChecklistItem>();
-		for(Class c : questionClasses){
+		for (Class c : questionClasses) {
 			checklist.addAll(getMany(c, "Checklist"));
 		}
 		return checklist;
@@ -46,10 +47,10 @@ public class Checklist extends Model implements Parcelable {
 
 	@Override
 	public boolean equals(Object obj) {
-		try{
+		try {
 			Checklist comp = (Checklist) obj;
 			return comp.name.equals(this.name);
-		} catch (ClassCastException e){
+		} catch (ClassCastException e) {
 			return false;
 		}
 	}
@@ -66,7 +67,7 @@ public class Checklist extends Model implements Parcelable {
 	}
 
 	public static final Parcelable.Creator<Checklist> CREATOR =
-			new Parcelable.Creator<Checklist>(){
+			new Parcelable.Creator<Checklist>() {
 
 				@Override
 				public Checklist createFromParcel(Parcel source) {

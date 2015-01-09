@@ -87,11 +87,13 @@ public class ChecklistActivity extends Activity {
 			this.mContext = context;
 			this.mInflater = LayoutInflater.from(mContext);
 		}
-		public ChecklistAdapter(Context context,List<String> checklists) {
+
+		public ChecklistAdapter(Context context, List<String> checklists) {
 			this(context);
 			this.checklists = checklists;
 		}
-		public class MyViewHolder extends WearableListView.ViewHolder{
+
+		public class MyViewHolder extends WearableListView.ViewHolder {
 			private TextView textView;
 			private ImageView imageView;
 
@@ -105,22 +107,23 @@ public class ChecklistActivity extends Activity {
 
 		@Override
 		public WearableListView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-			return new MyViewHolder(mInflater.inflate(R.layout.list_item,null));
+			return new MyViewHolder(mInflater.inflate(R.layout.list_item, null));
 		}
 
 		@Override
 		public void onBindViewHolder(WearableListView.ViewHolder viewHolder, int position) {
 			MyViewHolder holder = (MyViewHolder) viewHolder;
-			if(null != checklists) {
+			if (null != checklists) {
 				holder.textView.setText(checklists.get(position));
 			} else {
 				holder.textView.setText("waiting for Items ...");
 			}
 			holder.itemView.setTag(position);
 		}
+
 		@Override
 		public int getItemCount() {
-			return null != checklists ? checklists.size() : 1 ;
+			return null != checklists ? checklists.size() : 1;
 		}
 
 		public void updateChecklists(List<String> checklists) {

@@ -37,26 +37,27 @@ public class DataItemTestActivity extends Activity implements View.OnClickListen
 		findViewById(R.id.btn_submit).setOnClickListener(this);
 
 		mGoogleApiClient = new GoogleApiClient.Builder(this)
-        .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                @Override
-                public void onConnected(Bundle connectionHint) {
-                    Log.d(TAG, "onConnected: " + connectionHint);
-                    // Now you can use the Data Layer API
-                }
-                @Override
-                public void onConnectionSuspended(int cause) {
-                    Log.d(TAG, "onConnectionSuspended: " + cause);
-                }
-        })
-        .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
-                @Override
-                public void onConnectionFailed(ConnectionResult result) {
-                    Log.d(TAG, "onConnectionFailed: " + result);
-                }
-            })
-        // Request access only to the Wearable API
-        .addApi(Wearable.API)
-        .build();
+				.addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+					@Override
+					public void onConnected(Bundle connectionHint) {
+						Log.d(TAG, "onConnected: " + connectionHint);
+						// Now you can use the Data Layer API
+					}
+
+					@Override
+					public void onConnectionSuspended(int cause) {
+						Log.d(TAG, "onConnectionSuspended: " + cause);
+					}
+				})
+				.addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+					@Override
+					public void onConnectionFailed(ConnectionResult result) {
+						Log.d(TAG, "onConnectionFailed: " + result);
+					}
+				})
+						// Request access only to the Wearable API
+				.addApi(Wearable.API)
+				.build();
 		mGoogleApiClient.connect();
 	}
 
@@ -85,10 +86,10 @@ public class DataItemTestActivity extends Activity implements View.OnClickListen
 
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()){
+		switch (v.getId()) {
 			case R.id.btn_submit:
 				EditText text = (EditText) findViewById(R.id.editText);
-				((TextView)findViewById(R.id.textView)).setText(text.getText());
+				((TextView) findViewById(R.id.textView)).setText(text.getText());
 				updateDateItem(text.getText().toString());
 				break;
 			default:
@@ -99,10 +100,10 @@ public class DataItemTestActivity extends Activity implements View.OnClickListen
 
 	private void updateDateItem(String item) {
 		PutDataMapRequest dataMap = PutDataMapRequest.create(this.PATH_PREFIX + "item");
-		dataMap.getDataMap().putString("item",item);
+		dataMap.getDataMap().putString("item", item);
 
 		PutDataRequest request = dataMap.asPutDataRequest();
 		PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
-				.putDataItem(mGoogleApiClient,request);
+				.putDataItem(mGoogleApiClient, request);
 	}
 }

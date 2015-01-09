@@ -12,14 +12,15 @@ import de.inovex.fbuerkle.datamodel.Checklist;
 @Table(name = "CheckItems")
 public class CheckItem extends ChecklistItem {
 
-	public CheckItem(){}
+	public CheckItem() {
+	}
 
 	public CheckItem(String title, Checklist checklist) {
 		this.title = title;
 		this.checklist = checklist;
 	}
 
-	public CheckItem(Parcel p){
+	public CheckItem(Parcel p) {
 		this.title = p.readString();
 		this.description = p.readString();
 	}

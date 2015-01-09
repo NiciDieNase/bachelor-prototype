@@ -3,7 +3,7 @@ package de.inovex.fbuerkle;
 /**
  * Created by felix on 09/01/15.
  */
-public class DataKeys{
+public class DataKeys {
 	public static final String title = "title";
 	public static final String position = "position";
 	public static final String description = "description";

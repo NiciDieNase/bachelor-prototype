@@ -67,7 +67,7 @@ public class ProcessChecklistActivity extends Activity implements GoogleApiClien
 			}
 		});
 		getChecklist.await();
-		for(int i = 0; i < currentChecklist.length; i++){
+		for (int i = 0; i < currentChecklist.length; i++) {
 			PendingResult<DataItemBuffer> getItem = Wearable.DataApi.getDataItems(mGoogleApiClient, Uri.parse(checklist + "/" + i));
 			getChecklist.setResultCallback(new ResultCallback<DataItemBuffer>() {
 				@Override

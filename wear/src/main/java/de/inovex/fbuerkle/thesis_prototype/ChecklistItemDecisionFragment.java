@@ -10,15 +10,15 @@ import android.widget.TextView;
 /**
  * Created by felix on 04/12/14.
  */
-public class ChecklistItemDecisionFragment extends ChecklistFragment implements View.OnClickListener{
+public class ChecklistItemDecisionFragment extends ChecklistFragment implements View.OnClickListener {
 
 	private String text;
 
-	public ChecklistItemDecisionFragment(){
+	public ChecklistItemDecisionFragment() {
 		this("");
 	}
 
-	public ChecklistItemDecisionFragment(String text){
+	public ChecklistItemDecisionFragment(String text) {
 		this.text = text;
 	}
 
@@ -35,7 +35,7 @@ public class ChecklistItemDecisionFragment extends ChecklistFragment implements 
 
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()){
+		switch (v.getId()) {
 			case R.id.button_ok:
 				this.mListener.onOK();
 				break;
@@ -45,7 +45,7 @@ public class ChecklistItemDecisionFragment extends ChecklistFragment implements 
 		}
 	}
 
-	public void setText(String text){
+	public void setText(String text) {
 		this.text = text;
 	}
 }

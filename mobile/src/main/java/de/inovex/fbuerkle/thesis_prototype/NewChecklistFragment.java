@@ -27,7 +27,7 @@ public class NewChecklistFragment extends DialogFragment {
 		final View layout = inflater.inflate(R.layout.new_checklist, null);
 		builder.setView(layout);
 
-		builder.setPositiveButton("Create",new DialogInterface.OnClickListener() {
+		builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				String name = ((EditText) layout.findViewById(R.id.editText_name)).getText().toString();
@@ -39,7 +39,7 @@ public class NewChecklistFragment extends DialogFragment {
 				checklist.save();
 			}
 		});
-		builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				Log.d(TAG, "Canceled creation of new checklist");

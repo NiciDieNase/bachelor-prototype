@@ -11,23 +11,25 @@ import com.activeandroid.annotation.Table;
 @Table(name = "DecisionItems")
 public class DecisionItem extends ChecklistItem {
 
-    @Column
-    public String greenOption;
-    @Column
-    public String redOption;
+	@Column
+	public String greenOption;
+	@Column
+	public String redOption;
 
-	public DecisionItem(){}
-
-	public DecisionItem(String title){
-		this(title,"Yes","No");
+	public DecisionItem() {
 	}
 
-	public DecisionItem(Parcel p){
+	public DecisionItem(String title) {
+		this(title, "Yes", "No");
+	}
+
+	public DecisionItem(Parcel p) {
 		this.title = p.readString();
 		this.description = p.readString();
 		this.redOption = p.readString();
 		this.greenOption = p.readString();
 	}
+
 	@Override
 	public int describeContents() {
 		return 0;
@@ -41,7 +43,7 @@ public class DecisionItem extends ChecklistItem {
 		dest.writeString(this.greenOption);
 	}
 
-	public DecisionItem(String title, String greenOption, String redOption){
+	public DecisionItem(String title, String greenOption, String redOption) {
 		this.title = title;
 		this.greenOption = greenOption;
 		this.redOption = redOption;

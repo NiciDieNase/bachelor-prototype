@@ -15,7 +15,7 @@ import java.math.BigInteger;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DialpadInputFragment extends Fragment implements View.OnClickListener{
+public class DialpadInputFragment extends Fragment implements View.OnClickListener {
 
 	static final int AUTO_LAYOUT = 0;
 	static final int RECT_LAYOUT = 1;
@@ -30,29 +30,29 @@ public class DialpadInputFragment extends Fragment implements View.OnClickListen
 		i = 0;
 	}
 
-	public DialpadInputFragment(int i){
+	public DialpadInputFragment(int i) {
 		this.i = i;
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-		switch (this.i){
+		switch (this.i) {
 			case AUTO_LAYOUT:
-				layout = inflater.inflate(R.layout.number_input_dialpad,null);
+				layout = inflater.inflate(R.layout.number_input_dialpad, null);
 				break;
 			case RECT_LAYOUT:
-				layout = inflater.inflate(R.layout.number_input_dialpad_square,null);
+				layout = inflater.inflate(R.layout.number_input_dialpad_square, null);
 				break;
 			case ROUND_LAYOUT:
-				layout = inflater.inflate(R.layout.number_input_dialpad_round,null);
+				layout = inflater.inflate(R.layout.number_input_dialpad_round, null);
 				break;
 			default:
-				layout = inflater.inflate(R.layout.number_input_dialpad,null);
+				layout = inflater.inflate(R.layout.number_input_dialpad, null);
 				break;
 
 		}
-		if(this.i == AUTO_LAYOUT) {
+		if (this.i == AUTO_LAYOUT) {
 			((WatchViewStub) layout.findViewById(R.id.watch_view_stub))
 					.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
 						@Override
@@ -60,18 +60,17 @@ public class DialpadInputFragment extends Fragment implements View.OnClickListen
 							setClickListeners(watchViewStub);
 						}
 					});
-		}
-		else {
+		} else {
 			setClickListeners(layout);
 		}
 		return layout;
 	}
 
 	private void setClickListeners(View v) {
-		int [] buttons = {R.id.button_0, R.id.button_1, R.id.button_2, R.id.button_3, R.id.button_4,
+		int[] buttons = {R.id.button_0, R.id.button_1, R.id.button_2, R.id.button_3, R.id.button_4,
 				R.id.button_5, R.id.button_6, R.id.button_7, R.id.button_8,
 				R.id.button_9, R.id.button_ok, R.id.button_del};
-		for(int i:buttons){
+		for (int i : buttons) {
 			(v.findViewById(i)).setOnClickListener(this);
 		}
 	}
@@ -79,7 +78,7 @@ public class DialpadInputFragment extends Fragment implements View.OnClickListen
 
 	@Override
 	public void onClick(View v) {
-		switch(v.getId()){
+		switch (v.getId()) {
 			case R.id.button_0:
 				this.value = this.value.multiply(BigInteger.valueOf(10));
 				this.showValue();

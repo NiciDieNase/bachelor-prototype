@@ -9,13 +9,14 @@ import com.activeandroid.annotation.Table;
  * Created by felix on 16.12.14.
  */
 @Table(name = "SelectionItems")
-public class SelectionItem extends ChecklistItem{
-    @Column
-    public String valueName;
+public class SelectionItem extends ChecklistItem {
+	@Column
+	public String valueName;
 
-	public SelectionItem(){}
+	public SelectionItem() {
+	}
 
-	public SelectionItem(Parcel parcel){
+	public SelectionItem(Parcel parcel) {
 		this.title = parcel.readString();
 		this.description = parcel.readString();
 		this.valueName = parcel.readString();

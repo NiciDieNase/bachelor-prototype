@@ -73,12 +73,12 @@ public class WearableListItemLayout extends LinearLayout implements WearableList
 	@Override
 	public void onScaleUpStart() {
 		mText.setAlpha(1.0f);
-		((GradientDrawable)mMarker.getDrawable()).setColor(activeCircleColor);
+		((GradientDrawable) mMarker.getDrawable()).setColor(activeCircleColor);
 	}
 
 	@Override
 	public void onScaleDownStart() {
-		((GradientDrawable)mMarker.getDrawable()).setColor(inactiveCircleColor);
+		((GradientDrawable) mMarker.getDrawable()).setColor(inactiveCircleColor);
 		mText.setAlpha(mFadedText);
 
 	}

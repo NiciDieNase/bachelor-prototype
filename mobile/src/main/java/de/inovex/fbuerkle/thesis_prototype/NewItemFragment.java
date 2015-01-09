@@ -16,8 +16,8 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
-import de.inovex.fbuerkle.datamodel.Questions.CheckItem;
 import de.inovex.fbuerkle.datamodel.Checklist;
+import de.inovex.fbuerkle.datamodel.Questions.CheckItem;
 import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
 import de.inovex.fbuerkle.datamodel.Questions.DecisionItem;
 
@@ -28,7 +28,7 @@ public class NewItemFragment extends DialogFragment {
 
 	ItemTypes type = ItemTypes.Check;
 
-	public NewItemFragment(ItemTypes type){
+	public NewItemFragment(ItemTypes type) {
 		this.type = type;
 	}
 
@@ -38,12 +38,12 @@ public class NewItemFragment extends DialogFragment {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 
 		View layout = null;
-		switch (this.type){
+		switch (this.type) {
 			case Check:
 				layout = inflater.inflate(R.layout.create_checkitem, null);
 				break;
 			case Decision:
-				layout = inflater.inflate(R.layout.create_decisionitem,null);
+				layout = inflater.inflate(R.layout.create_decisionitem, null);
 			case ValueSelect:
 				// TODO implement new Value-Select
 				break;
@@ -57,39 +57,39 @@ public class NewItemFragment extends DialogFragment {
 		builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int id) {
-				if(null != finalLayout){
-					Checklist currentChecklist =((MainActivity) getActivity()).currentChecklist;
+				if (null != finalLayout) {
+					Checklist currentChecklist = ((MainActivity) getActivity()).currentChecklist;
 					int position = currentChecklist.items().size();
 
-					PutDataMapRequest dataMap = PutDataMapRequest.create("/checklist/"+ currentChecklist.name.toLowerCase()+"/"+position);
-					dataMap.getDataMap().putInt("position",position);
+					PutDataMapRequest dataMap = PutDataMapRequest.create("/checklist/" + currentChecklist.name.toLowerCase() + "/" + position);
+					dataMap.getDataMap().putInt("position", position);
 
 					ChecklistItem item = null;
 					String title = "";
-					switch (NewItemFragment.this.type){
+					switch (NewItemFragment.this.type) {
 						case Check:
 							title = ((EditText) finalLayout.findViewById(R.id.editText_title)).getText().toString();
 							item = new CheckItem();
 
-							dataMap.getDataMap().putString("type","CheckItem");
+							dataMap.getDataMap().putString("type", "CheckItem");
 							break;
 						case Decision:
 							String greenText, redText;
 							title = ((EditText) finalLayout.findViewById(R.id.editText_title)).getText().toString();
 							greenText = ((EditText) finalLayout.findViewById(R.id.editText_green)).getText().toString();
-							redText =((EditText) finalLayout.findViewById(R.id.editText_red)).getText().toString();
+							redText = ((EditText) finalLayout.findViewById(R.id.editText_red)).getText().toString();
 							item = new DecisionItem(title, greenText, redText);
 
-							dataMap.getDataMap().putString("redText",redText);
-							dataMap.getDataMap().putString("greenText",greenText);
-							dataMap.getDataMap().putString("type","DecisionItem");
+							dataMap.getDataMap().putString("redText", redText);
+							dataMap.getDataMap().putString("greenText", greenText);
+							dataMap.getDataMap().putString("type", "DecisionItem");
 							break;
 						// TODO handle other item-types
 					}
-					if(null != item){
-						dataMap.getDataMap().putString("title",title);
+					if (null != item) {
+						dataMap.getDataMap().putString("title", title);
 						ActiveAndroid.beginTransaction();
-						try{
+						try {
 							item.title = title;
 							item.checklist = currentChecklist;
 							item.position = position;
@@ -102,7 +102,7 @@ public class NewItemFragment extends DialogFragment {
 
 							PutDataRequest request = dataMap.asPutDataRequest();
 							PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
-									.putDataItem(((MainActivity) ((MainActivity) getActivity())).getmGoogleApiClient(),request);
+									.putDataItem(((MainActivity) ((MainActivity) getActivity())).getmGoogleApiClient(), request);
 						}
 					}
 				}
@@ -115,6 +115,6 @@ public class NewItemFragment extends DialogFragment {
 			}
 		});
 
-	return builder.create();
+		return builder.create();
 	}
 }

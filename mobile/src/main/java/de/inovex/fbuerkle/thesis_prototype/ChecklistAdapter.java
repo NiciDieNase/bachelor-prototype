@@ -11,8 +11,8 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import de.inovex.fbuerkle.datamodel.Questions.CheckItem;
 import de.inovex.fbuerkle.datamodel.Checklist;
+import de.inovex.fbuerkle.datamodel.Questions.CheckItem;
 import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
 import de.inovex.fbuerkle.datamodel.Questions.DecisionItem;
 
@@ -25,13 +25,14 @@ public class ChecklistAdapter extends BaseAdapter implements AdapterView.OnItemC
 	private Checklist checklist;
 	private Context mContext;
 
-	static class ViewHolder{
+	static class ViewHolder {
 
 		TextView titelView;
 		TextView typeView;
 		TextView optionsView;
 	}
-	public ChecklistAdapter(Context mContext, Checklist checklist){
+
+	public ChecklistAdapter(Context mContext, Checklist checklist) {
 		this.mContext = mContext;
 		this.checklist = checklist;
 	}
@@ -40,6 +41,7 @@ public class ChecklistAdapter extends BaseAdapter implements AdapterView.OnItemC
 	public int getCount() {
 		return checklist.items().size();
 	}
+
 	@Override
 	public Object getItem(int position) {
 		return checklist.items().get(position);
@@ -54,9 +56,9 @@ public class ChecklistAdapter extends BaseAdapter implements AdapterView.OnItemC
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder viewHolder;
 
-		if(null == convertView){
-			LayoutInflater inflater = ((Activity)mContext).getLayoutInflater();
-			convertView = inflater.inflate(R.layout.list_item,parent,false);
+		if (null == convertView) {
+			LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
+			convertView = inflater.inflate(R.layout.list_item, parent, false);
 			viewHolder = new ViewHolder();
 			viewHolder.titelView = (TextView) convertView.findViewById(R.id.tv_title);
 			viewHolder.typeView = (TextView) convertView.findViewById(R.id.tv_type);
@@ -70,10 +72,10 @@ public class ChecklistAdapter extends BaseAdapter implements AdapterView.OnItemC
 		String type = "";
 		String options = "";
 		ChecklistItem item = checklist.items().get(position);
-		if(item.getClass().equals(DecisionItem.class)){
+		if (item.getClass().equals(DecisionItem.class)) {
 			type = "Decision";
-			options = ((DecisionItem) item).greenOption + " / " +((DecisionItem) item).redOption;
-		} else if(item.getClass().equals(CheckItem.class)){
+			options = ((DecisionItem) item).greenOption + " / " + ((DecisionItem) item).redOption;
+		} else if (item.getClass().equals(CheckItem.class)) {
 			type = "Check";
 		}
 
@@ -88,7 +90,7 @@ public class ChecklistAdapter extends BaseAdapter implements AdapterView.OnItemC
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		builder.setMessage(mContext.getString(R.string.do_you_want_to_delete_this_item))
 				.setTitle(mContext.getString(R.string.confirm_delete))
-				.setPositiveButton("Delete", new DialogInterface.OnClickListener(){
+				.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						ChecklistItem item = checklist.items().get(position);
@@ -100,7 +102,7 @@ public class ChecklistAdapter extends BaseAdapter implements AdapterView.OnItemC
 						// TODO delete DataItem
 					}
 				})
-				.setNegativeButton("Cancel",null);
+				.setNegativeButton("Cancel", null);
 		builder.show();
 	}
 }

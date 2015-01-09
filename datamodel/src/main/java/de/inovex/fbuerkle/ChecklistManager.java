@@ -42,7 +42,7 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 	}
 
 	public class SyncBinder extends Binder {
-		public ChecklistManager getService(){
+		public ChecklistManager getService() {
 			return ChecklistManager.this;
 		}
 	}
@@ -54,7 +54,7 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 
 	@Override
 	public void onConnectionSuspended(int i) {
-		Wearable.DataApi.removeListener(mGoogleApiClient,this);
+		Wearable.DataApi.removeListener(mGoogleApiClient, this);
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 		super.onDestroy();
 	}
 
-	public List<String> getChecklists(){
+	public List<String> getChecklists() {
 		return checklists;
 	}
 
@@ -91,7 +91,7 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 		result.setResultCallback(new ResultCallback<DataItemBuffer>() {
 			@Override
 			public void onResult(DataItemBuffer dataItems) {
-				if(dataItems.getCount() != 0){
+				if (dataItems.getCount() != 0) {
 					DataMapItem mapItem = DataMapItem.fromDataItem(dataItems.get(0));
 					Log.d(TAG, mapItem.getUri().toString());
 
@@ -103,11 +103,11 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 		});
 	}
 
-	public Checklist getChecklist(String name){
+	public Checklist getChecklist(String name) {
 		return null;
 	}
 
-	public void syncChecklist(Checklist checklist){
+	public void syncChecklist(Checklist checklist) {
 		PutDataMapRequest metaChecklist = PutDataMapRequest.create("/checklists/" + checklist.name.toLowerCase());
 		DataMap dataMap = metaChecklist.getDataMap();
 
@@ -115,15 +115,15 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 		dataMap.putString(DataKeys.description, checklist.description);
 
 		PendingResult<DataApi.DataItemResult> metaChecklistResult = Wearable.DataApi
-				.putDataItem(this.mGoogleApiClient,metaChecklist.asPutDataRequest());
+				.putDataItem(this.mGoogleApiClient, metaChecklist.asPutDataRequest());
 
 		PutDataMapRequest checklistItem = PutDataMapRequest.create("/checklists/" + checklist.name.toLowerCase() + "/items");
 		Bundle bundle = new Bundle();
 		List<ChecklistItem> items = checklist.items();
 //		bundle.putParcelableArrayList("items",items);
-		bundle.putInt("size",items.size());
-		for(int i = 0; i < items.size(); i++){
-			bundle.putParcelable(String.valueOf(i),items.get(i));
+		bundle.putInt("size", items.size());
+		for (int i = 0; i < items.size(); i++) {
+			bundle.putParcelable(String.valueOf(i), items.get(i));
 		}
 		checklistItem.getDataMap().putAll(DataMap.fromBundle(bundle));
 	}
