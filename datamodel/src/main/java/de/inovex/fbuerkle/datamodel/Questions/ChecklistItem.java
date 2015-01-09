@@ -1,5 +1,8 @@
 package de.inovex.fbuerkle.datamodel.Questions;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -13,15 +16,12 @@ import de.inovex.fbuerkle.datamodel.Checklist;
  * Created by felix on 15/12/14.
  */
 @Table(name = "ChecklistItems")
-public class ChecklistItem extends Model implements Comparable {
+public abstract class ChecklistItem extends Model implements Parcelable {
 	@Column (name = "Title")
 	public String title;
 
 	@Column(name = "Checklist")
 	public Checklist checklist;
-
-	@Column(name = "Position")
-	public int position;
 
 	@Column(name = "Description")
 	public String description;
@@ -50,9 +50,10 @@ public class ChecklistItem extends Model implements Comparable {
 		return getMany(AnswerItem.class, "Question");
 	}
 
+
 	@Override
-	public int compareTo(Object another) {
-		ChecklistItem other = (ChecklistItem) another;
-		return this.position - other.position;
-	}
+	public abstract int describeContents();
+
+	@Override
+	public abstract void writeToParcel(Parcel dest, int flags);
 }
