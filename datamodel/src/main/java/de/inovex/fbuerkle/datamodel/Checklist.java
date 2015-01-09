@@ -8,7 +8,6 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import de.inovex.fbuerkle.datamodel.Questions.CheckItem;
@@ -28,6 +27,8 @@ public class Checklist extends Model implements Parcelable {
 	@Column(name = "Description")
 	public String description;
 
+	public Checklist(){}
+
 	public Checklist(Parcel parcel) {
 		this.name = parcel.readString();
 		this.description = parcel.readString();
@@ -40,7 +41,6 @@ public class Checklist extends Model implements Parcelable {
 		for(Class c : questionClasses){
 			checklist.addAll(getMany(c, "Checklist"));
 		}
-		Collections.sort(checklist);
 		return checklist;
 	}
 

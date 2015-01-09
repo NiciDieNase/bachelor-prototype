@@ -20,8 +20,6 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,7 +133,7 @@ public class MainActivity extends Activity{
 							PutDataMapRequest dataMap = PutDataMapRequest.create("/checklists/"+list.name.toLowerCase());
 							dataMap.getDataMap().putString("name",list.name);
 							dataMap.getDataMap().putString("description",list.description);
-							PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleApiClient,request);
+							PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleApiClient,dataMap.asPutDataRequest());
 							listNames.add(list.name);
 						}
 
