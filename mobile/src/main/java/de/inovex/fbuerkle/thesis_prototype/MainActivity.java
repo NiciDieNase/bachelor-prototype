@@ -23,6 +23,7 @@ import com.google.android.gms.wearable.Wearable;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.inovex.fbuerkle.DataKeys;
 import de.inovex.fbuerkle.datamodel.Checklist;
 
 
@@ -131,9 +132,10 @@ public class MainActivity extends Activity{
 
 						for(Checklist list : checklists){
 							PutDataMapRequest dataMap = PutDataMapRequest.create("/checklists/"+list.name.toLowerCase());
-							dataMap.getDataMap().putString("name",list.name);
-							dataMap.getDataMap().putString("description",list.description);
-							dataMap.getDataMap().putString("type","Checklist");
+							dataMap.getDataMap().putString(DataKeys.name,list.name);
+							dataMap.getDataMap().putString(DataKeys.description,list.description);
+							dataMap.getDataMap().putString(DataKeys.type,"Checklist");
+							dataMap.getDataMap().putInt(DataKeys.length,list.length);
 							PutDataRequest request = dataMap.asPutDataRequest();
 							PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleApiClient,request);
 							listNames.add(list.name);
