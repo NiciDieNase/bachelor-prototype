@@ -41,6 +41,12 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 		return mBinder;
 	}
 
+	public class SyncBinder extends Binder {
+		public ChecklistManager getService(){
+			return ChecklistManager.this;
+		}
+	}
+
 	@Override
 	public void onConnected(Bundle bundle) {
 		Wearable.DataApi.addListener(mGoogleApiClient, this);
@@ -62,12 +68,6 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 		}
 	}
 
-	public class SyncBinder extends Binder {
-
-		ChecklistManager getService(){
-			return ChecklistManager.this;
-		}
-	}
 	@Override
 	public void onCreate() {
 		super.onCreate();
