@@ -4,6 +4,7 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
+import java.io.Serializable;
 import java.util.List;
 
 import de.inovex.fbuerkle.datamodel.Answers.AnswerItem;
@@ -13,7 +14,7 @@ import de.inovex.fbuerkle.datamodel.Checklist;
  * Created by felix on 15/12/14.
  */
 @Table(name = "ChecklistItems")
-public class ChecklistItem extends Model implements Comparable {
+public class ChecklistItem extends Model implements Comparable, Serializable {
 	@Column (name = "Title")
 	public String title;
 
