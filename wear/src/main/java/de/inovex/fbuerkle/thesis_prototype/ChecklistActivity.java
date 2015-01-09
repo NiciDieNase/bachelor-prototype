@@ -106,7 +106,6 @@ public class ChecklistActivity extends Activity implements DataApi.DataListener,
 			}
 		}
 		updateChecklists();
-
 	}
 
 	@Override
@@ -116,12 +115,13 @@ public class ChecklistActivity extends Activity implements DataApi.DataListener,
 
 	@Override
 	public void onConnectionSuspended(int i) {
-
+		Wearable.DataApi.removeListener(mGoogleApiClient,this);
 	}
 
 	@Override
 	public void onClick(WearableListView.ViewHolder viewHolder) {
 		// TODO start checklist
+
 	}
 
 	@Override

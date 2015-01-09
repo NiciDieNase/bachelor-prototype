@@ -84,6 +84,7 @@ public class NewItemFragment extends DialogFragment {
 							dataMap.getDataMap().putString("greenText",greenText);
 							dataMap.getDataMap().putString("type","DecisionItem");
 							break;
+						// TODO handle other item-types
 					}
 					if(null != item){
 						dataMap.getDataMap().putString("title",title);
@@ -93,6 +94,8 @@ public class NewItemFragment extends DialogFragment {
 							item.checklist = currentChecklist;
 							item.position = position;
 							item.save();
+							item.checklist.length++;
+							item.checklist.save();
 							ActiveAndroid.setTransactionSuccessful();
 						} finally {
 							ActiveAndroid.endTransaction();

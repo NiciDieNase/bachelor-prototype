@@ -93,6 +93,8 @@ public class ChecklistAdapter extends BaseAdapter implements AdapterView.OnItemC
 					public void onClick(DialogInterface dialog, int which) {
 						ChecklistItem item = checklist.items().get(position);
 						checklist.items().remove(position);
+						item.checklist.length--;
+						item.checklist.save();
 						item.delete();
 						ChecklistAdapter.this.notifyDataSetChanged();
 						// TODO delete DataItem
