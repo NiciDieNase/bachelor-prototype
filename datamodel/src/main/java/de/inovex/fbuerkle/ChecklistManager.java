@@ -3,6 +3,7 @@ package de.inovex.fbuerkle;
 import android.app.Service;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -87,20 +88,29 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 	}
 
 	private void updateChecklists() {
-		PendingResult<DataItemBuffer> result = Wearable.DataApi.getDataItems(mGoogleApiClient, Uri.parse("wear:/checklists"));
-		result.setResultCallback(new ResultCallback<DataItemBuffer>() {
-			@Override
-			public void onResult(DataItemBuffer dataItems) {
-				if (dataItems.getCount() != 0) {
-					DataMapItem mapItem = DataMapItem.fromDataItem(dataItems.get(0));
-					Log.d(TAG, mapItem.getUri().toString());
+		new ChecklistsUpdate().execute();
+	}
 
-					checklists = mapItem.getDataMap().getStringArrayList("checklists");
+	private class ChecklistsUpdate extends AsyncTask<Void,Void,Void>{
+		@Override
+		protected Void doInBackground(Void... params) {
+			PendingResult<DataItemBuffer> result = Wearable.DataApi.getDataItems(mGoogleApiClient, Uri.parse("wear:/checklists"));
+			result.setResultCallback(new ResultCallback<DataItemBuffer>() {
+				@Override
+				public void onResult(DataItemBuffer dataItems) {
+					if (dataItems.getCount() != 0) {
+						DataMapItem mapItem = DataMapItem.fromDataItem(dataItems.get(0));
+						Log.d(TAG, mapItem.getUri().toString());
 
-					dataItems.release();
+						ChecklistManager.this.checklists = mapItem.getDataMap().getStringArrayList("checklists");
+
+						dataItems.release();
+					}
 				}
-			}
-		});
+			});
+			result.await();
+			return null;
+		}
 	}
 
 	public Checklist getChecklist(String name) {

@@ -74,6 +74,7 @@ public class MainActivity extends Activity {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			ChecklistManager.SyncBinder binder = (ChecklistManager.SyncBinder) service;
 			mSyncService = binder.getService();
+			mBound = true;
 		}
 
 		@Override

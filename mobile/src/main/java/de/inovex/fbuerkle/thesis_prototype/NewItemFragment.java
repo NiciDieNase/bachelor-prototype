@@ -28,6 +28,8 @@ public class NewItemFragment extends DialogFragment {
 
 	ItemTypes type = ItemTypes.Check;
 
+	public NewItemFragment(){};
+
 	public NewItemFragment(ItemTypes type) {
 		this.type = type;
 	}

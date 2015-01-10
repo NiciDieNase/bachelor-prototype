@@ -27,6 +27,7 @@ public class ChecklistActivity extends Activity {
 	private boolean mBound;
 	private static final String TAG = "ChecklistActivity";
 	private ChecklistManager mSyncService;
+	protected ChecklistAdapter checklistAdapter;
 
 	private String[] checklistNames;
 
@@ -42,9 +43,11 @@ public class ChecklistActivity extends Activity {
 			@Override
 			public void onLayoutInflated(WatchViewStub stub) {
 				WearableListView listView = (WearableListView) findViewById(R.id.wearable_list);
-				ChecklistAdapter checklistAdapter = new ChecklistAdapter(ChecklistActivity.this);
+				checklistAdapter = new ChecklistAdapter(ChecklistActivity.this);
 				if(mBound){
 					checklistAdapter.updateChecklists(mSyncService.getChecklists());
+				}else {
+					Log.d(TAG,"Couldn't update list because service is not bound");
 				}
 				listView.setAdapter(checklistAdapter);
 				listView.setClickListener(mClickListener);
@@ -75,6 +78,10 @@ public class ChecklistActivity extends Activity {
 		public void onClick(WearableListView.ViewHolder viewHolder) {
 			// TODO start checklist
 
+			if(mBound){
+				Log.d(TAG,"updating checklists");
+				checklistAdapter.updateChecklists(mSyncService.getChecklists());
+			}
 		}
 
 		@Override
@@ -88,6 +95,7 @@ public class ChecklistActivity extends Activity {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			ChecklistManager.SyncBinder binder = (ChecklistManager.SyncBinder) service;
 			mSyncService = binder.getService();
+			mBound = true;
 		}
 
 		@Override
