@@ -60,7 +60,11 @@ public class ChecklistActivity extends Activity {
 	protected void onStart() {
 		super.onStart();
 		Intent i = new Intent(this, ChecklistManager.class);
-		bindService(i,mConnection,Context.BIND_AUTO_CREATE);
+		if(bindService(i,mConnection,Context.BIND_AUTO_CREATE)){
+			Log.d(TAG, "bound service");
+		} else {
+			Log.d(TAG, "binding failed");
+		}
 	}
 
 	@Override

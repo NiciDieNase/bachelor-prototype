@@ -32,8 +32,11 @@
         </activity>
 
         <service
-            android:name="de.inovex.fbuerkle.ChecklistManager"
-            android:exported="false"/>
+            android:name="de.inovex.fbuerkle.ChecklistManager" >
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
+            </intent-filter>
+        </service>
 
         <meta-data
             android:name="com.google.android.gms.version"

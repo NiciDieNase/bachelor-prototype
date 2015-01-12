@@ -1,14 +1,10 @@
 package de.inovex.fbuerkle;
 
-import android.app.Service;
-import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -17,12 +13,12 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
-import com.google.android.gms.wearable.DataItemBuffer;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
+import com.google.android.gms.wearable.WearableListenerService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,16 +29,47 @@ import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
 /**
  * Created by felix on 09/01/15.
  */
-public class ChecklistManager extends Service implements GoogleApiClient.ConnectionCallbacks, DataApi.DataListener {
+public class ChecklistManager extends WearableListenerService {
 	private static final String TAG = "de.inovex.fbuerkle.ChecklistManager";
 	private final IBinder mBinder = new SyncBinder();
 	private GoogleApiClient mGoogleApiClient;
 	private ArrayList<String> checklists;
 
+	public static final String KEY_CHECKLISTS = "checklists";
+	public static final String LIST_OF_CHECKLIST = "/checklists";
+	public static final String CHECKLIST = "/checklist/"; // + checklist-name
+	//public final String ITEMS = "/items/"; // /checklist/[name]/items/[n]
+
 	@Override
-	public IBinder onBind(Intent intent) {
-		updateChecklists();
-		return mBinder;
+	public void onDataChanged(DataEventBuffer dataEvents) {
+		for (DataEvent event : dataEvents) {
+			if (event.getType() == DataEvent.TYPE_DELETED) {
+				Log.d(TAG, "DataItem deleted: " + event.getDataItem().getUri());
+			} else if (event.getType() == DataEvent.TYPE_CHANGED) {
+				Log.d(TAG, "DataItem changed: " + event.getDataItem().getUri());
+
+				String path = event.getDataItem().getUri().getPath();
+
+				// List of Checklists
+				if(path.matches(LIST_OF_CHECKLIST)){
+					Log.d(TAG,"list of checklists changed");
+					DataMap dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
+					this.checklists = dataMap.getStringArrayList(KEY_CHECKLISTS);
+				}
+				// A Checklist
+				else if(path.startsWith(CHECKLIST) && !path.endsWith("/items")){
+					// TODO handle checklist change
+					String name = path.split("/")[1];
+					Log.d(TAG,"a checklist changed: " + name);
+				}
+				// Items of a checklist
+				else if(path.startsWith(CHECKLIST) && path.endsWith("/items")){
+					// TODO handle items change
+					String name = path.split("/")[1];
+					Log.d(TAG,"checklist-items changed: " + name);
+				}
+			}
+}
 	}
 
 	public class SyncBinder extends Binder {
@@ -52,85 +79,43 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 	}
 
 	@Override
-	public void onConnected(Bundle bundle) {
-		Wearable.DataApi.addListener(mGoogleApiClient, this);
-	}
-
-	@Override
-	public void onConnectionSuspended(int i) {
-		Wearable.DataApi.removeListener(mGoogleApiClient, this);
-	}
-
-	@Override
-	public void onDataChanged(DataEventBuffer dataEvents) {
-		for (DataEvent event : dataEvents) {
-			if (event.getType() == DataEvent.TYPE_DELETED) {
-				Log.d(TAG, "DataItem deleted: " + event.getDataItem().getUri());
-			} else if (event.getType() == DataEvent.TYPE_CHANGED) {
-				Log.d(TAG, "DataItem changed: " + event.getDataItem().getUri());
-			}
-		}
-	}
-
-	@Override
 	public void onCreate() {
 		super.onCreate();
 		this.mGoogleApiClient = new GoogleApiClient.Builder(this)
 				.addApi(Wearable.API)
-				.addConnectionCallbacks(this)
 				.build();
 	}
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
 
 	public List<String> getChecklists() {
 		if(null == checklists){
-			this.updateChecklists();
 		}
+		this.updateChecklists();
 		return checklists;
 	}
 
 	private void updateChecklists() {
-		ChecklistsUpdate update = new ChecklistsUpdate();
-		update.execute();
-	}
-
-	private class ChecklistsUpdate extends AsyncTask<Void,Void,Void>{
-		@Override
-		protected Void doInBackground(Void... params) {
-			PendingResult<DataItemBuffer> result = Wearable.DataApi.getDataItems(mGoogleApiClient, Uri.parse("wear:/checklists"));
-			result.setResultCallback(new ResultCallback<DataItemBuffer>() {
-				@Override
-				public void onResult(DataItemBuffer dataItems) {
-					if (dataItems.getCount() != 0) {
-						DataMapItem mapItem = DataMapItem.fromDataItem(dataItems.get(0));
-						Log.d(TAG, mapItem.getUri().toString());
-
+		PendingResult<DataApi.DataItemResult> result = Wearable.DataApi.getDataItem(mGoogleApiClient, Uri.parse("wear:/checklists"));
+		result.setResultCallback(
+				new ResultCallback<DataApi.DataItemResult>() {
+					@Override
+					public void onResult(DataApi.DataItemResult dataItemResult) {
+						DataMapItem mapItem = DataMapItem.fromDataItem(dataItemResult.getDataItem());
 						ChecklistManager.this.checklists = mapItem.getDataMap().getStringArrayList("checklists");
-
-						dataItems.release();
 					}
-				}
-			});
-			result.await();
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void aVoid) {
-			Toast.makeText(ChecklistManager.this,"update finished",Toast.LENGTH_SHORT).show();
-		}
+				});
 	}
+
+
+
 
 	public Checklist getChecklist(String name) {
+		// TODO
 		return null;
 	}
 
 	public void syncChecklist(Checklist checklist) {
-		PutDataMapRequest metaChecklist = PutDataMapRequest.create("/checklists/" + checklist.name.toLowerCase());
+		PutDataMapRequest metaChecklist = PutDataMapRequest.create("/checklists/" + checklist.name.toLowerCase().replace(" ","_"));
 		DataMap dataMap = metaChecklist.getDataMap();
 
 		dataMap.putString(DataKeys.name, checklist.name);
@@ -138,6 +123,12 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 
 		PendingResult<DataApi.DataItemResult> metaChecklistResult = Wearable.DataApi
 				.putDataItem(this.mGoogleApiClient, metaChecklist.asPutDataRequest());
+		metaChecklistResult.setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
+			@Override
+			public void onResult(DataApi.DataItemResult dataItemResult) {
+				Log.d(TAG,dataItemResult.getStatus().toString());
+			}
+		});
 
 		PutDataMapRequest checklistItem = PutDataMapRequest.create("/checklists/" + checklist.name.toLowerCase() + "/items");
 		Bundle bundle = new Bundle();
@@ -148,7 +139,14 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 			bundle.putParcelable(String.valueOf(i), items.get(i));
 		}
 		checklistItem.getDataMap().putAll(DataMap.fromBundle(bundle));
-		Wearable.DataApi.putDataItem(this.mGoogleApiClient, checklistItem.asPutDataRequest());
+		PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
+				.putDataItem(this.mGoogleApiClient, checklistItem.asPutDataRequest());
+		pendingResult.setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
+			@Override
+			public void onResult(DataApi.DataItemResult dataItemResult) {
+				Log.d(TAG,dataItemResult.getStatus().toString());
+			}
+		});
 	}
 
 	public void publishListOfChecklists(){
@@ -157,9 +155,15 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 		for(Checklist list : checklists){
 			listNames.add(list.name);
 		}
-		PutDataMapRequest dataMap = PutDataMapRequest.create("/checklists");
-		dataMap.getDataMap().putStringArrayList("checklists",listNames);
+		PutDataMapRequest dataMap = PutDataMapRequest.create(LIST_OF_CHECKLIST);
+		dataMap.getDataMap().putStringArrayList(KEY_CHECKLISTS,listNames);
 		PutDataRequest request = dataMap.asPutDataRequest();
 		PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleApiClient,request);
+		pendingResult.setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
+			@Override
+			public void onResult(DataApi.DataItemResult dataItemResult) {
+				Log.d(TAG, dataItemResult.getStatus().toString());
+			}
+		});
 	}
 }
