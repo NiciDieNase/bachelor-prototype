@@ -114,6 +114,10 @@ public class MainActivity extends Activity {
 				// TODO sync checklists
 				if(mBound){
 					mSyncService.syncChecklist(currentChecklist);
+					mSyncService.publishListOfChecklists();
+					Toast.makeText(this,"Synced",Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(this,"no sync service",Toast.LENGTH_SHORT).show();
 				}
 				return true;
 			case R.id.action_add_checklist:

@@ -8,7 +8,9 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.activeandroid.query.Select;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -19,6 +21,7 @@ import com.google.android.gms.wearable.DataItemBuffer;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
 import java.util.ArrayList;
@@ -84,11 +87,15 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 	}
 
 	public List<String> getChecklists() {
+		if(null == checklists){
+			this.updateChecklists();
+		}
 		return checklists;
 	}
 
 	private void updateChecklists() {
-		new ChecklistsUpdate().execute();
+		ChecklistsUpdate update = new ChecklistsUpdate();
+		update.execute();
 	}
 
 	private class ChecklistsUpdate extends AsyncTask<Void,Void,Void>{
@@ -110,6 +117,11 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 			});
 			result.await();
 			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void aVoid) {
+			Toast.makeText(ChecklistManager.this,"update finished",Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -136,6 +148,18 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 			bundle.putParcelable(String.valueOf(i), items.get(i));
 		}
 		checklistItem.getDataMap().putAll(DataMap.fromBundle(bundle));
+		Wearable.DataApi.putDataItem(this.mGoogleApiClient, checklistItem.asPutDataRequest());
 	}
 
+	public void publishListOfChecklists(){
+		List<Checklist> checklists =  new Select().from(Checklist.class).execute();
+		ArrayList<String> listNames = new ArrayList<String>();
+		for(Checklist list : checklists){
+			listNames.add(list.name);
+		}
+		PutDataMapRequest dataMap = PutDataMapRequest.create("/checklists");
+		dataMap.getDataMap().putStringArrayList("checklists",listNames);
+		PutDataRequest request = dataMap.asPutDataRequest();
+		PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleApiClient,request);
+	}
 }
