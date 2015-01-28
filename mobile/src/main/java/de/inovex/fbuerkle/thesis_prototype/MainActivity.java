@@ -61,7 +61,9 @@ public class MainActivity extends Activity {
 		super.onStart();
 		Intent i = new Intent(this, ChecklistManager.class);
 		bindService(i,mConnection, Context.BIND_AUTO_CREATE);
+//		startService(i);
 	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -113,9 +115,9 @@ public class MainActivity extends Activity {
 			case R.id.action_sync:
 				// TODO sync checklists
 				if(mBound){
-					mSyncService.syncChecklist(currentChecklist);
+//					mSyncService.syncChecklist(currentChecklist);
 					mSyncService.publishListOfChecklists();
-					Toast.makeText(this,"Synced",Toast.LENGTH_SHORT).show();
+					Toast.makeText(this,"Published List",Toast.LENGTH_SHORT).show();
 				} else {
 					Toast.makeText(this,"no sync service",Toast.LENGTH_SHORT).show();
 				}

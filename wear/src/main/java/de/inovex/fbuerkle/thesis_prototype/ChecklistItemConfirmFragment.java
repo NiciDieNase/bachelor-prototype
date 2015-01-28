@@ -25,10 +25,21 @@ public class ChecklistItemConfirmFragment extends ChecklistFragment implements V
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View layout = inflater.inflate(R.layout.check_item_layout_2, container, false);
+		final View layout = inflater.inflate(R.layout.check_item_layout_2, container, false);
+
 		TextView confirmText = (TextView) layout.findViewById(R.id.text_decision);
 		confirmText.setText(text);
-		layout.findViewById(R.id.button_confirm).setOnClickListener(this);
+		layout.findViewById(R.id.button_confirm).setOnClickListener(ChecklistItemConfirmFragment.this);
+
+//		final WatchViewStub stub = (WatchViewStub) layout.findViewById(R.id.watch_view_stub);
+//		stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
+//			@Override
+//			public void onLayoutInflated(WatchViewStub watchViewStub) {
+//				TextView confirmText = (TextView) layout.findViewById(R.id.text_decision);
+//				confirmText.setText(text);
+//				layout.findViewById(R.id.button_confirm).setOnClickListener(ChecklistItemConfirmFragment.this);
+//			}
+//		});
 		return layout;
 	}
 

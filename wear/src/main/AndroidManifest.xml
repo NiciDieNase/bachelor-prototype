@@ -9,18 +9,28 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.DeviceDefault">
-        <!--<activity
+        <activity
             android:name="de.inovex.fbuerkle.thesis_prototype.TestActivity"
             android:label="@string/test_app">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>-->
+        </activity>
 
         <activity
             android:name="de.inovex.fbuerkle.thesis_prototype.ChecklistActivity"
             android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="de.inovex.fbuerkle.thesis_prototype.SyncTestActivity"
+            android:label="SyncTest">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

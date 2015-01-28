@@ -3,7 +3,7 @@
     <string-array name="item_types">
         <item>Check</item>
         <item>Decision</item>
-        <item>Pick Value</item>
-        <item>Pick Option</item>
+        <!--<item>Pick Value</item>-->
+        <!--<item>Pick Option</item>-->
     </string-array>
 </resources>

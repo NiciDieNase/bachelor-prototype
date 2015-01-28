@@ -10,11 +10,6 @@ import android.os.IBinder;
 import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.view.WearableListView;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +22,7 @@ public class ChecklistActivity extends Activity {
 	private boolean mBound;
 	private static final String TAG = "ChecklistActivity";
 	private ChecklistManager mSyncService;
-	protected ChecklistAdapter checklistAdapter;
+	protected WearableStringListAdapter checklistAdapter;
 
 	private String[] checklistNames;
 
@@ -43,9 +38,9 @@ public class ChecklistActivity extends Activity {
 			@Override
 			public void onLayoutInflated(WatchViewStub stub) {
 				WearableListView listView = (WearableListView) findViewById(R.id.wearable_list);
-				checklistAdapter = new ChecklistAdapter(ChecklistActivity.this);
+				checklistAdapter = new WearableStringListAdapter(ChecklistActivity.this);
 				if(mBound){
-					checklistAdapter.updateChecklists(mSyncService.getChecklists());
+					checklistAdapter.updateStrings(mSyncService.getChecklists());
 				}else {
 					Log.d(TAG,"Couldn't update list because service is not bound");
 				}
@@ -63,14 +58,14 @@ public class ChecklistActivity extends Activity {
 		bindService(i,mConnection,Context.BIND_AUTO_CREATE);
 	}
 
-	@Override
-	protected void onStop() {
-		super.onStop();
-		if(mBound){
-			unbindService(mConnection);
-			mBound = false;
-		}
-	}
+//	@Override
+//	protected void onStop() {
+//		super.onStop();
+//		if(mBound){
+//			unbindService(mConnection);
+//			mBound = false;
+//		}
+//	}
 
 	private WearableListView.ClickListener mClickListener = new WearableListView.ClickListener() {
 
@@ -80,7 +75,9 @@ public class ChecklistActivity extends Activity {
 
 			if(mBound){
 				Log.d(TAG,"updating checklists");
-				checklistAdapter.updateChecklists(mSyncService.getChecklists());
+				checklistAdapter.updateStrings(mSyncService.getChecklists());
+			} else {
+				Log.d(TAG, "can't update, not bound");
 			}
 		}
 
@@ -104,60 +101,4 @@ public class ChecklistActivity extends Activity {
 		}
 	};
 
-	private class ChecklistAdapter extends WearableListView.Adapter {
-		private final LayoutInflater mInflater;
-
-		private Context mContext;
-
-		private List<String> checklists;
-
-		public ChecklistAdapter(Context context) {
-			this.mContext = context;
-			this.mInflater = LayoutInflater.from(mContext);
-		}
-
-		public ChecklistAdapter(Context context, List<String> checklists) {
-			this(context);
-			this.checklists = checklists;
-		}
-
-		public class MyViewHolder extends WearableListView.ViewHolder {
-			private TextView textView;
-			private ImageView imageView;
-
-			public MyViewHolder(View itemView) {
-				super(itemView);
-				textView = (TextView) itemView.findViewById(R.id.item_text);
-				imageView = (ImageView) itemView.findViewById(R.id.marker);
-			}
-
-		}
-
-		@Override
-		public WearableListView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-			return new MyViewHolder(mInflater.inflate(R.layout.list_item, null));
-		}
-
-		@Override
-		public void onBindViewHolder(WearableListView.ViewHolder viewHolder, int position) {
-			MyViewHolder holder = (MyViewHolder) viewHolder;
-			if (null != checklists) {
-				holder.textView.setText(checklists.get(position));
-			} else {
-				holder.textView.setText("waiting for Items ...");
-			}
-			holder.itemView.setTag(position);
-		}
-
-		@Override
-		public int getItemCount() {
-			return null != checklists ? checklists.size() : 1;
-		}
-
-		public void updateChecklists(List<String> checklists) {
-			this.checklists = checklists;
-			this.notifyDataSetChanged();
-		}
-
-	}
 }
