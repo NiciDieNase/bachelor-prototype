@@ -6,21 +6,32 @@ import android.support.wearable.view.WatchViewStub;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+
+import de.inovex.fbuerkle.datamodel.Questions.DecisionItem;
 
 /**
  * Created by felix on 04/12/14.
  */
 public class ChecklistItemDecisionFragment extends ChecklistFragment implements View.OnClickListener {
 
-	String text;
+	String titleText;
+	String okayText = "yes";
+	String cancelText = "no";
 
 	public ChecklistItemDecisionFragment() {
 		this("");
 	}
 
 	public ChecklistItemDecisionFragment(String text) {
-		this.text = text;
+		this.titleText = text;
+	}
+
+	public ChecklistItemDecisionFragment(DecisionItem item) {
+		this.titleText = item.title;
+		this.okayText = item.greenOption;
+		this.cancelText = item.redOption;
 	}
 
 	@Nullable
@@ -32,9 +43,13 @@ public class ChecklistItemDecisionFragment extends ChecklistFragment implements 
 			@Override
 			public void onLayoutInflated(WatchViewStub watchViewStub) {
 				TextView decisionText = (TextView) layout.findViewById(R.id.text_decision);
-				decisionText.setText(ChecklistItemDecisionFragment.this.text);
-				layout.findViewById(R.id.button_ok).setOnClickListener(ChecklistItemDecisionFragment.this);
-				layout.findViewById(R.id.button_cancel).setOnClickListener(ChecklistItemDecisionFragment.this);
+				decisionText.setText(ChecklistItemDecisionFragment.this.titleText);
+				Button okButton = (Button) layout.findViewById(R.id.button_ok);
+				okButton.setOnClickListener(ChecklistItemDecisionFragment.this);
+				okButton.setText(ChecklistItemDecisionFragment.this.okayText);
+				Button cancelButton = (Button) layout.findViewById(R.id.button_cancel);
+				cancelButton.setOnClickListener(ChecklistItemDecisionFragment.this);
+				cancelButton.setText(ChecklistItemDecisionFragment.this.cancelText);
 			}
 		});
 
@@ -54,7 +69,7 @@ public class ChecklistItemDecisionFragment extends ChecklistFragment implements 
 		}
 	}
 
-	public void setText(String text) {
-		this.text = text;
+	public void setTitle(String text) {
+		this.titleText = text;
 	}
 }

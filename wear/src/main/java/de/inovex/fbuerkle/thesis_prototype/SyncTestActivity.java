@@ -51,6 +51,7 @@ public class SyncTestActivity extends Activity implements DataApi.DataListener, 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_checklist);
 		this.mGoogleApiClient = new GoogleApiClient.Builder(this)
+				.addConnectionCallbacks(this)
 				.addApi(Wearable.API)
 				.build();
 

@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import de.inovex.fbuerkle.datamodel.Questions.CheckItem;
+
 /**
  * Created by felix on 04/12/14.
  */
@@ -20,6 +22,10 @@ public class ChecklistItemConfirmFragment extends ChecklistFragment implements V
 
 	public ChecklistItemConfirmFragment(String text) {
 		this.text = text;
+	}
+
+	public ChecklistItemConfirmFragment(CheckItem item){
+		this.text = item.title;
 	}
 
 	@Nullable

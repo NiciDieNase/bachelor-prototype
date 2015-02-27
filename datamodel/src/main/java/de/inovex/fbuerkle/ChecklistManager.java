@@ -122,7 +122,7 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 
 		@Override
 		protected void onPostExecute(Void aVoid) {
-			Toast.makeText(ChecklistManager.this,"update finished",Toast.LENGTH_SHORT).show();
+//			Toast.makeText(ChecklistManager.this,"update finished",Toast.LENGTH_SHORT).show();
 		}
 	}
 
