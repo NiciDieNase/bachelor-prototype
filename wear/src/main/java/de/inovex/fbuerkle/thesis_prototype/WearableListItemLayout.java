@@ -2,16 +2,17 @@ package de.inovex.fbuerkle.thesis_prototype;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.support.wearable.view.WearableListView;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import static android.support.wearable.view.WearableListView.OnCenterProximityListener;
+
 /**
  * Created by felix on 10/10/14.
  */
-public class WearableListItemLayout extends LinearLayout implements WearableListView.Item {
+public class WearableListItemLayout extends LinearLayout implements OnCenterProximityListener {
 
 	private final float mFadedText;
 	private final int inactiveCircleColor;
@@ -32,6 +33,7 @@ public class WearableListItemLayout extends LinearLayout implements WearableList
 
 	public WearableListItemLayout(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+		mScale = 1.5f;
 		mFadedText = 0.5f;
 		inactiveCircleColor = getResources().getColor(R.color.icon_active);
 		activeCircleColor = getResources().getColor(R.color.icon_active);
@@ -47,39 +49,20 @@ public class WearableListItemLayout extends LinearLayout implements WearableList
 	}
 
 	@Override
-	public float getProximityMinValue() {
-		return 1.0f;
-	}
-
-	@Override
-	public float getProximityMaxValue() {
-		return 1.5f;
-	}
-
-	@Override
-	public float getCurrentProximityValue() {
-		return mScale;
-	}
-
-	@Override
-	public void setScalingAnimatorValue(float v) {
-		mScale = v;
-
-//		mItem.setScaleY(mScale);
+	public void onCenterPosition(boolean b) {
+		mText.setAlpha(1f);
+		((GradientDrawable)mMarker.getDrawable()).setColor(activeCircleColor);
+		((GradientDrawable)mMarker.getDrawable()).setAlpha(255);
 		mMarker.setScaleX(mScale);
 		mMarker.setScaleY(mScale);
 	}
 
 	@Override
-	public void onScaleUpStart() {
-		mText.setAlpha(1.0f);
-		((GradientDrawable) mMarker.getDrawable()).setColor(activeCircleColor);
-	}
-
-	@Override
-	public void onScaleDownStart() {
-		((GradientDrawable) mMarker.getDrawable()).setColor(inactiveCircleColor);
+	public void onNonCenterPosition(boolean b) {
 		mText.setAlpha(mFadedText);
-
+		((GradientDrawable)mMarker.getDrawable()).setColor(inactiveCircleColor);
+		((GradientDrawable)mMarker.getDrawable()).setAlpha(120);
+		mMarker.setScaleX(1f);
+		mMarker.setScaleY(1f);
 	}
 }
