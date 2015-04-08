@@ -34,7 +34,7 @@ import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
  * Created by felix on 09/01/15.
  */
 public class ChecklistManager extends Service implements GoogleApiClient.ConnectionCallbacks, DataApi.DataListener {
-	private static final String TAG = "de.inovex.fbuerkle.ChecklistManager";
+	private static final String TAG = "ChecklistManager";
 	private final IBinder mBinder = new SyncBinder();
 	private GoogleApiClient mGoogleApiClient;
 	private ArrayList<String> checklists;
@@ -101,7 +101,7 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 	private class ChecklistsUpdate extends AsyncTask<Void,Void,Void>{
 		@Override
 		protected Void doInBackground(Void... params) {
-			PendingResult<DataItemBuffer> result = Wearable.DataApi.getDataItems(mGoogleApiClient, Uri.parse("wear:/checklists/"));
+			PendingResult<DataItemBuffer> result = Wearable.DataApi.getDataItems(mGoogleApiClient, Uri.parse("wear:/checklists"));
 			result.setResultCallback(new ResultCallback<DataItemBuffer>() {
 				@Override
 				public void onResult(DataItemBuffer dataItems) {
@@ -159,10 +159,21 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 		for(Checklist list : checklists){
 			listNames.add(list.name);
 		}
-		PutDataMapRequest dataMap = PutDataMapRequest.create("/checklists/");
+		PutDataMapRequest dataMap = PutDataMapRequest.create("/checklists");
 		dataMap.getDataMap().putStringArrayList("checklists",listNames);
 		PutDataRequest request = dataMap.asPutDataRequest();
 		PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleApiClient,request);
-		Log.d(TAG,"Published: " + listNames.toString());
+		Log.d(TAG,"Publishing: " + listNames.toString());
+		pendingResult.setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
+			@Override
+			public void onResult(DataApi.DataItemResult dataItemResult) {
+				if(dataItemResult.getStatus().isSuccess()){
+					Log.d(TAG,"Published: success");
+				} else {
+					Log.d(TAG,"Published: failure");
+				}
+			}
+		});
+
 	}
 }

@@ -24,4 +24,9 @@
         android:id="@+id/action_add_checklist"
         android:title="@string/action_add_checklist"
         android:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_test"
+        android:title="@string/test"
+        android:showAsAction="never"/>
 </menu>

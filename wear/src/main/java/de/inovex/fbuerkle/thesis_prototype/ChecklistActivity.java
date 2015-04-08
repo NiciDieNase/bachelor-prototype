@@ -7,15 +7,24 @@ import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.view.WearableListView;
 import android.util.Log;
+
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.DataEvent;
+import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataItemBuffer;
+import com.google.android.gms.wearable.DataMapItem;
+import com.google.android.gms.wearable.Wearable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +35,7 @@ import de.inovex.fbuerkle.datamodel.Questions.CheckItem;
 import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
 import de.inovex.fbuerkle.datamodel.Questions.DecisionItem;
 
-public class ChecklistActivity extends Activity implements ChecklistFragment.OnChecklistItemResultListener {
+public class ChecklistActivity extends Activity implements ChecklistFragment.OnChecklistItemResultListener, GoogleApiClient.ConnectionCallbacks, DataApi.DataListener {
 
 	private static final int NOTIFICATION_ID = 42;
 	private boolean mBound;
@@ -39,6 +48,7 @@ public class ChecklistActivity extends Activity implements ChecklistFragment.OnC
 	private String[] checklistNames;
 
 	private List<Checklist> checklists = new ArrayList<Checklist>();
+	private GoogleApiClient mGoogleApiClient;
 
 	public ChecklistActivity(){
 		this.listItems = new ArrayList<ChecklistItem>();
@@ -52,81 +62,68 @@ public class ChecklistActivity extends Activity implements ChecklistFragment.OnC
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.process_checklist);
-		Bundle extras = this.getIntent().getExtras();
-		if(extras != null && extras.containsKey("currentItem")){
-			this.currentListItem = extras.getInt("currentItem");
-		}
-		this.nextFragment();
 
-//		setContentView(R.layout.activity_checklist);
-//		final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
-//		stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
-//			@Override
-//			public void onLayoutInflated(WatchViewStub stub) {
-//				WearableListView listView = (WearableListView) findViewById(R.id.wearable_list);
-//				checklistAdapter = new WearableStringListAdapter(ChecklistActivity.this);
-//				if(mBound){
-//					checklistAdapter.updateStrings(mSyncService.getChecklists());
-//				}else {
-//					Log.d(TAG,"Couldn't update list because service is not bound");
-//				}
-//				listView.setAdapter(checklistAdapter);
-//				listView.setClickListener(mClickListener);
-//				Log.i(TAG, "setting adapter and click listener");
-//			}
-//		});
-	}
+		this.mGoogleApiClient = new GoogleApiClient.Builder(this)
+				.addApi(Wearable.API)
+				.addConnectionCallbacks(this)
+				.build();
+		mGoogleApiClient.connect();
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-//		Intent i = new Intent(this, ChecklistManager.class);
-//		bindService(i,mConnection,Context.BIND_AUTO_CREATE);
-	}
-
-//	@Override
-//	protected void onStop() {
-//		super.onStop();
-//		if(mBound){
-//			unbindService(mConnection);
-//			mBound = false;
+//		setContentView(R.layout.process_checklist);
+//		Bundle extras = this.getIntent().getExtras();
+//		if(extras != null && extras.containsKey("currentItem")){
+//			this.currentListItem = extras.getInt("currentItem");
 //		}
-//	}
+//		this.nextFragment();
+
+		setContentView(R.layout.activity_checklist);
+		final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
+		stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
+			@Override
+			public void onLayoutInflated(WatchViewStub stub) {
+				WearableListView listView = (WearableListView) findViewById(R.id.wearable_list);
+				checklistAdapter = new WearableStringListAdapter(ChecklistActivity.this);
+				updateChecklists();
+				listView.setAdapter(checklistAdapter);
+				listView.setClickListener(mClickListener);
+				Log.i(TAG, "setting adapter and click listener");
+			}
+		});
+	}
+
+	private void updateChecklists() {
+		Uri uri = Uri.parse("wear:/checklists");
+		PendingResult<DataItemBuffer> result = Wearable.DataApi.getDataItems(mGoogleApiClient, uri);
+		result.setResultCallback(new ResultCallback<DataItemBuffer>() {
+					@Override
+					public void onResult(DataItemBuffer dataItems) {
+						if (dataItems.getCount() > 0) {
+							DataMapItem mapItem = DataMapItem.fromDataItem(dataItems.get(0));
+							Log.d(TAG, "Handling DataItem: " + mapItem.getUri().toString());
+							ArrayList<String> checklists = mapItem.getDataMap().getStringArrayList("checklists");
+							checklistAdapter.updateStrings(checklists);
+							dataItems.release();
+						}
+					}
+				});
+	}
+
 
 	private WearableListView.ClickListener mClickListener = new WearableListView.ClickListener() {
 
 		@Override
 		public void onClick(WearableListView.ViewHolder viewHolder) {
-			// TODO start checklist
-
-//			if(mBound){
-//				Log.d(TAG,"updating checklists");
-//				checklistAdapter.updateStrings(mSyncService.getChecklists());
-//			} else {
-//				Log.d(TAG, "can't update, not bound");
-//			}
+			Log.d(TAG,"item click");
+			updateChecklists();
 		}
 
 		@Override
 		public void onTopEmptyRegionClick() {
-
+			Log.d(TAG, "empty region click");
+			updateChecklists();
 		}
 	};
 
-	private ServiceConnection mConnection = new ServiceConnection() {
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			ChecklistManager.SyncBinder binder = (ChecklistManager.SyncBinder) service;
-			mSyncService = binder.getService();
-			mBound = true;
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			mBound = false;
-		}
-	};
 
 	private Fragment getNextItemFragment(){
 		if(currentListItem>=listItems.size()-1){
@@ -215,5 +212,22 @@ public class ChecklistActivity extends Activity implements ChecklistFragment.OnC
 		}
 		NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.cancel(NOTIFICATION_ID);
+	}
+
+	@Override
+	public void onConnected(Bundle bundle) {
+		Wearable.DataApi.addListener(mGoogleApiClient,this);
+	}
+
+	@Override
+	public void onConnectionSuspended(int i) {
+
+	}
+
+	@Override
+	public void onDataChanged(DataEventBuffer dataEvents) {
+		for (DataEvent event : dataEvents) {
+			Log.d(TAG,"DataEvent: " + event.toString() + " URI: " + event.getDataItem().getUri());
+		}
 	}
 }
