@@ -42,14 +42,11 @@ public class ChecklistActivity extends Activity implements ChecklistFragment.OnC
 
 	public ChecklistActivity(){
 		this.listItems = new ArrayList<ChecklistItem>();
-		listItems.add(new DecisionItem("0?"));
-		listItems.add(new CheckItem("1",null));
-		listItems.add(new DecisionItem("2?"));
-		listItems.add(new CheckItem("3",null));
-		listItems.add(new DecisionItem("4?"));
-		listItems.add(new CheckItem("5",null));
-		listItems.add(new DecisionItem("6?"));
-		listItems.add(new CheckItem("End",null));
+		listItems.add(new CheckItem("Hello",null));
+		listItems.add(new DecisionItem("Is everything okay?"));
+		listItems.add(new DecisionItem("Did you like the talk?"));
+		listItems.add(new DecisionItem("Was the\ntalk too long?"));
+		listItems.add(new CheckItem("Goodbye",null));
 	}
 
 	@Override
@@ -176,6 +173,8 @@ public class ChecklistActivity extends Activity implements ChecklistFragment.OnC
 			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 			transaction.commit();
 		} else {
+			NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+			notificationManager.cancel(NOTIFICATION_ID);
 			finish();
 //			Toast.makeText(this, "Done", Toast.LENGTH_SHORT);
 		}
