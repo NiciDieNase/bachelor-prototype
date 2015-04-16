@@ -8,6 +8,6 @@
     android:layout_height="match_parent"
     app:rectLayout="@layout/rect_activity_checklist"
     app:roundLayout="@layout/round_activity_checklist"
-    tools:context="de.inovex.fbuerkle.thesis_prototype.ChecklistActivity"
+    tools:context="de.inovex.fbuerkle.thesis_prototype.ChecklistProcessActivity"
     tools:deviceIds="wear">
 </android.support.wearable.view.WatchViewStub>

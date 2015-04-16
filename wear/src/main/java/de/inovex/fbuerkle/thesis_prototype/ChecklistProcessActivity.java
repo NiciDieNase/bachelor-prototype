@@ -28,7 +28,7 @@ import de.inovex.fbuerkle.datamodel.Questions.CheckItem;
 import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
 import de.inovex.fbuerkle.datamodel.Questions.DecisionItem;
 
-public class ChecklistActivity extends Activity implements ChecklistFragment.OnChecklistItemResultListener, ChecklistSelectFragment.OnChecklistSelectedListener {
+public class ChecklistProcessActivity extends Activity implements ChecklistFragment.OnChecklistItemResultListener{
 
 	private static final int NOTIFICATION_ID = 42;
 	private boolean mBound;
@@ -43,10 +43,6 @@ public class ChecklistActivity extends Activity implements ChecklistFragment.OnC
 	private List<Checklist> checklists = new ArrayList<Checklist>();
 	private GoogleApiClient mGoogleApiClient;
 
-	private enum ProcessingState {Selecting, Processing};
-
-	private ProcessingState currentState = ProcessingState.Selecting;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,8 +54,6 @@ public class ChecklistActivity extends Activity implements ChecklistFragment.OnC
 		setContentView(R.layout.process_checklist);
 		Bundle extras = this.getIntent().getExtras();
 		if(extras != null && extras.containsKey("currentItem")){
-			// TODO handle resume
-			this.currentState = ProcessingState.Processing;
 			this.currentListItem = extras.getInt("currentItem");
 		} else {
 			// Start checklist selection
@@ -138,15 +132,8 @@ public class ChecklistActivity extends Activity implements ChecklistFragment.OnC
 		}
 	}
 
-	@Override
-	public void onChecklistSelected(String name) {
-		Log.d(TAG,"Checklist selected");
-		currentState = ProcessingState.Processing;
-		loadChecklist(name);
-	}
-
 	private void loadChecklist(String name) {
-		
+
 	}
 
 	@Override
@@ -187,7 +174,7 @@ public class ChecklistActivity extends Activity implements ChecklistFragment.OnC
 	protected void onPause() {
 		super.onPause();
 		// create Notification to restart/continue
-		Intent notificationIntent = new Intent(this, ChecklistActivity.class);
+		Intent notificationIntent = new Intent(this, ChecklistProcessActivity.class);
 		notificationIntent.putExtra("currentItem", this.currentListItem);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		Notification.Action restart = new Notification.Action(R.drawable.transparent_icon, null, pendingIntent);
