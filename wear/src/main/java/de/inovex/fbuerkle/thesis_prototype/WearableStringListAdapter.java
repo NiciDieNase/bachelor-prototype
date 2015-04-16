@@ -18,6 +18,7 @@ class WearableStringListAdapter extends WearableListView.Adapter {
 
 	private Context mContext;
 
+	private String emptyListString = "loading items";
 	private List<String> strings;
 
 	public WearableStringListAdapter(Context context) {
@@ -53,7 +54,7 @@ class WearableStringListAdapter extends WearableListView.Adapter {
 		if (null != strings) {
 			holder.textView.setText(strings.get(position));
 		} else {
-			holder.textView.setText("waiting for Items ...");
+			holder.textView.setText(emptyListString);
 		}
 		holder.itemView.setTag(position);
 	}
@@ -68,4 +69,7 @@ class WearableStringListAdapter extends WearableListView.Adapter {
 		this.notifyDataSetChanged();
 	}
 
+	public void setEmptyListString(String emptyListString) {
+		this.emptyListString = emptyListString;
+	}
 }

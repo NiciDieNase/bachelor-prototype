@@ -11,5 +11,6 @@
     <string name="title_activity_checklist">ChecklistActivity</string>
     <string name="hello_round">Hello Round World!</string>
     <string name="hello_square">Hello Square World!</string>
+    <string name="list_reload">press to reload</string>
 
 </resources>

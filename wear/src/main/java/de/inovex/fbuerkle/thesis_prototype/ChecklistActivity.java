@@ -83,7 +83,8 @@ public class ChecklistActivity extends Activity implements ChecklistFragment.OnC
 			public void onLayoutInflated(WatchViewStub stub) {
 				WearableListView listView = (WearableListView) findViewById(R.id.wearable_list);
 				checklistAdapter = new WearableStringListAdapter(ChecklistActivity.this);
-				updateChecklists();
+				checklistAdapter.setEmptyListString(getString(R.string.list_reload));
+				updateAdapterList();
 				listView.setAdapter(checklistAdapter);
 				listView.setClickListener(mClickListener);
 				Log.i(TAG, "setting adapter and click listener");
@@ -91,7 +92,7 @@ public class ChecklistActivity extends Activity implements ChecklistFragment.OnC
 		});
 	}
 
-	private void updateChecklists() {
+	private void updateAdapterList() {
 		Uri uri = Uri.parse("wear:/checklists");
 		PendingResult<DataItemBuffer> result = Wearable.DataApi.getDataItems(mGoogleApiClient, uri);
 		result.setResultCallback(new ResultCallback<DataItemBuffer>() {
@@ -114,13 +115,13 @@ public class ChecklistActivity extends Activity implements ChecklistFragment.OnC
 		@Override
 		public void onClick(WearableListView.ViewHolder viewHolder) {
 			Log.d(TAG,"item click");
-			updateChecklists();
+			updateAdapterList();
 		}
 
 		@Override
 		public void onTopEmptyRegionClick() {
 			Log.d(TAG, "empty region click");
-			updateChecklists();
+			updateAdapterList();
 		}
 	};
 
