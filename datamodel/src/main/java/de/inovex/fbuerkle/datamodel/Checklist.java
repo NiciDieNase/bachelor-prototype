@@ -1,11 +1,9 @@
 package de.inovex.fbuerkle.datamodel;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.google.android.gms.wearable.DataMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +18,7 @@ import de.inovex.fbuerkle.datamodel.Questions.SelectionItem;
  * Created by felix on 15/12/14.
  */
 @Table(name = "Checklists")
-public class Checklist extends Model implements Parcelable {
+public class Checklist extends Model{
 	@Column(name = "Name", index = true, unique = true)
 	public String name;
 
@@ -30,9 +28,9 @@ public class Checklist extends Model implements Parcelable {
 	public Checklist() {
 	}
 
-	public Checklist(Parcel parcel) {
-		this.name = parcel.readString();
-		this.description = parcel.readString();
+	public Checklist(DataMap map) {
+		this.name = map.getString("name");
+		this.description = map.getString("description");
 	}
 
 	public List<ChecklistItem> items() {
@@ -45,38 +43,9 @@ public class Checklist extends Model implements Parcelable {
 		return checklist;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		try {
-			Checklist comp = (Checklist) obj;
-			return comp.name.equals(this.name);
-		} catch (ClassCastException e) {
-			return false;
-		}
+	public DataMap putToDataMap(DataMap map){
+		map.putString("name",name);
+		map.putString("description",description);
+		return map;
 	}
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(this.name);
-		dest.writeString(this.description);
-	}
-
-	public static final Parcelable.Creator<Checklist> CREATOR =
-			new Parcelable.Creator<Checklist>() {
-
-				@Override
-				public Checklist createFromParcel(Parcel source) {
-					return new Checklist(source);
-				}
-
-				@Override
-				public Checklist[] newArray(int size) {
-					return new Checklist[size];
-				}
-			};
 }

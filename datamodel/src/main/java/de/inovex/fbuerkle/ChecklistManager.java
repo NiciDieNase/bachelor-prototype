@@ -34,7 +34,7 @@ import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
  * Created by felix on 09/01/15.
  */
 public class ChecklistManager extends Service implements GoogleApiClient.ConnectionCallbacks, DataApi.DataListener {
-	private static final String TAG = "de.inovex.fbuerkle.ChecklistManager";
+	private static final String TAG = "ChecklistManager";
 	private final IBinder mBinder = new SyncBinder();
 	private GoogleApiClient mGoogleApiClient;
 	private ArrayList<String> checklists;
@@ -79,6 +79,7 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 				.addApi(Wearable.API)
 				.addConnectionCallbacks(this)
 				.build();
+		mGoogleApiClient.connect();
 	}
 
 	@Override
@@ -144,11 +145,12 @@ public class ChecklistManager extends Service implements GoogleApiClient.Connect
 		Bundle bundle;
 		for (int i = 0; i < items.size(); i++) {
 			PutDataMapRequest checklistItem = PutDataMapRequest.create("/checklists/" + checklist.name.toLowerCase() + "/" + i);
-			bundle = new Bundle();
+//			bundle = new Bundle();
 //			bundle.putParcelableArrayList("items",items);
-			bundle.putParcelable(String.valueOf(i), items.get(i));
+//			bundle.putParcelable(String.valueOf(i), items.get(i));
 //			bundle.putInt("size", items.size());
-			checklistItem.getDataMap().putAll(DataMap.fromBundle(bundle));
+//			checklistItem.getDataMap().putAll(DataMap.fromBundle(bundle));
+			items.get(i).putToDataMap(checklistItem.getDataMap());
 			Wearable.DataApi.putDataItem(this.mGoogleApiClient, checklistItem.asPutDataRequest());
 		}
 	}

@@ -14,8 +14,10 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.wearable.view.WearableListView;
 import android.util.Log;
+
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.Wearable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,7 @@ import de.inovex.fbuerkle.datamodel.Questions.CheckItem;
 import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
 import de.inovex.fbuerkle.datamodel.Questions.DecisionItem;
 
-public class ChecklistActivity extends Activity implements ChecklistFragment.OnChecklistItemResultListener {
+public class ChecklistActivity extends Activity implements ChecklistFragment.OnChecklistItemResultListener, ChecklistSelectFragment.OnChecklistSelectedListener {
 
 	private static final int NOTIFICATION_ID = 42;
 	private boolean mBound;
@@ -39,28 +41,36 @@ public class ChecklistActivity extends Activity implements ChecklistFragment.OnC
 	private String[] checklistNames;
 
 	private List<Checklist> checklists = new ArrayList<Checklist>();
+	private GoogleApiClient mGoogleApiClient;
 
-	public ChecklistActivity(){
-		this.listItems = new ArrayList<ChecklistItem>();
-		listItems.add(new DecisionItem("0?"));
-		listItems.add(new CheckItem("1",null));
-		listItems.add(new DecisionItem("2?"));
-		listItems.add(new CheckItem("3",null));
-		listItems.add(new DecisionItem("4?"));
-		listItems.add(new CheckItem("5",null));
-		listItems.add(new DecisionItem("6?"));
-		listItems.add(new CheckItem("End",null));
-	}
+	private enum ProcessingState {Selecting, Processing};
+
+	private ProcessingState currentState = ProcessingState.Selecting;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		this.mGoogleApiClient = new GoogleApiClient.Builder(this)
+				.addApi(Wearable.API)
+//				.addConnectionCallbacks(this)
+				.build();
+		mGoogleApiClient.connect();
 		setContentView(R.layout.process_checklist);
 		Bundle extras = this.getIntent().getExtras();
 		if(extras != null && extras.containsKey("currentItem")){
+			// TODO handle resume
+			this.currentState = ProcessingState.Processing;
 			this.currentListItem = extras.getInt("currentItem");
+		} else {
+			// Start checklist selection
+			ChecklistSelectFragment selectFragment = new ChecklistSelectFragment(this, mGoogleApiClient);
+			FragmentManager fragmentManager = getFragmentManager();
+			FragmentTransaction transaction = fragmentManager.beginTransaction();
+			transaction.replace(R.id.fragment_container, selectFragment,"fragment_container");
+			transaction.setTransition(FragmentTransaction.TRANSIT_NONE);
+			transaction.commit();
 		}
-		this.nextFragment();
+//		this.nextFragment();
 
 //		setContentView(R.layout.activity_checklist);
 //		final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
@@ -97,25 +107,6 @@ public class ChecklistActivity extends Activity implements ChecklistFragment.OnC
 //		}
 //	}
 
-	private WearableListView.ClickListener mClickListener = new WearableListView.ClickListener() {
-
-		@Override
-		public void onClick(WearableListView.ViewHolder viewHolder) {
-			// TODO start checklist
-
-//			if(mBound){
-//				Log.d(TAG,"updating checklists");
-//				checklistAdapter.updateStrings(mSyncService.getChecklists());
-//			} else {
-//				Log.d(TAG, "can't update, not bound");
-//			}
-		}
-
-		@Override
-		public void onTopEmptyRegionClick() {
-
-		}
-	};
 
 	private ServiceConnection mConnection = new ServiceConnection() {
 		@Override
@@ -145,6 +136,17 @@ public class ChecklistActivity extends Activity implements ChecklistFragment.OnC
 				return null;
 			}
 		}
+	}
+
+	@Override
+	public void onChecklistSelected(String name) {
+		Log.d(TAG,"Checklist selected");
+		currentState = ProcessingState.Processing;
+		loadChecklist(name);
+	}
+
+	private void loadChecklist(String name) {
+		
 	}
 
 	@Override
