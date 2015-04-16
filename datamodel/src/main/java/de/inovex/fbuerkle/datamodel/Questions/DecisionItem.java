@@ -1,9 +1,8 @@
 package de.inovex.fbuerkle.datamodel.Questions;
 
-import android.os.Parcel;
-
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.google.android.gms.wearable.DataMap;
 
 /**
  * Created by felix on 16.12.14.
@@ -23,41 +22,23 @@ public class DecisionItem extends ChecklistItem {
 		this(title, "Yes", "No");
 	}
 
-	public DecisionItem(Parcel p) {
-		this.title = p.readString();
-		this.description = p.readString();
-		this.redOption = p.readString();
-		this.greenOption = p.readString();
-	}
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(this.title);
-		dest.writeString(this.description);
-		dest.writeString(this.redOption);
-		dest.writeString(this.greenOption);
-	}
-
-	public DecisionItem(String title, String greenOption, String redOption) {
+	public DecisionItem(String title, String yes, String no) {
 		this.title = title;
-		this.greenOption = greenOption;
-		this.redOption = redOption;
+		this.greenOption = yes;
+		this.redOption = no;
 	}
 
-	public static final Creator<DecisionItem> CREATOR = new Creator<DecisionItem>() {
-		@Override
-		public DecisionItem createFromParcel(Parcel source) {
-			return new DecisionItem(source);
-		}
+	public DecisionItem(DataMap map){
+		super(map);
+		this.greenOption = map.getString("greenOption");
+		this.redOption = map.getString("redOption");
+	}
 
-		@Override
-		public DecisionItem[] newArray(int size) {
-			return new DecisionItem[size];
-		}
-	};
+	@Override
+	public DataMap putToDataMap(DataMap map) {
+		map = super.putToDataMap(map);
+		map.putString("redOption",redOption);
+		map.putString("greenOption",greenOption);
+		return map;
+	}
 }

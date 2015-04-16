@@ -1,11 +1,9 @@
 package de.inovex.fbuerkle.datamodel.Questions;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.google.android.gms.wearable.DataMap;
 
 import java.util.List;
 
@@ -16,7 +14,7 @@ import de.inovex.fbuerkle.datamodel.Checklist;
  * Created by felix on 15/12/14.
  */
 @Table(name = "ChecklistItems")
-public abstract class ChecklistItem extends Model implements Parcelable {
+public abstract class ChecklistItem extends Model{
 	@Column(name = "Title")
 	public String title;
 
@@ -42,6 +40,11 @@ public abstract class ChecklistItem extends Model implements Parcelable {
 		this.checklist = list;
 	}
 
+	public ChecklistItem(DataMap map){
+		this.title = map.getString("title");
+		this.description = map.getString("description");
+	}
+
 	@Override
 	public String toString() {
 		return this.title;
@@ -51,10 +54,9 @@ public abstract class ChecklistItem extends Model implements Parcelable {
 		return getMany(AnswerItem.class, "Question");
 	}
 
-
-	@Override
-	public abstract int describeContents();
-
-	@Override
-	public abstract void writeToParcel(Parcel dest, int flags);
+	public DataMap putToDataMap(DataMap map){
+		map.putString("title",title);
+		map.putString("description",description);
+		return map;
+	}
 }
