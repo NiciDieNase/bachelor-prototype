@@ -9,8 +9,12 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -20,7 +24,7 @@ import de.inovex.fbuerkle.ChecklistManager;
 import de.inovex.fbuerkle.datamodel.Checklist;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 
 	private boolean mBound;
 
@@ -29,6 +33,8 @@ public class MainActivity extends Activity {
 	protected ChecklistManager mSyncService;
 
 	public Checklist currentChecklist;
+	private ListView mDrawerList;
+	private ListView checkListView;
 
 	public MainActivity() {
 		super();
@@ -50,10 +56,15 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		ListView listView = (ListView) findViewById(R.id.listView);
+		checkListView = (ListView) findViewById(R.id.listView);
 		ChecklistAdapter adapter = new ChecklistAdapter(this, currentChecklist);
-		listView.setAdapter(adapter);
-		listView.setOnItemClickListener(adapter);
+		checkListView.setAdapter(adapter);
+		checkListView.setOnItemClickListener(adapter);
+
+
+		mDrawerList = (ListView) findViewById(R.id.left_drawer);
+		mDrawerList.setAdapter(new ChecklistSelectAdapter(this));
+		mDrawerList.setOnItemClickListener(this);
 	}
 
 	@Override
@@ -124,6 +135,7 @@ public class MainActivity extends Activity {
 				return true;
 			case R.id.action_add_checklist:
 				new NewChecklistFragment().show(getFragmentManager(), "newChecklistFragment");
+				((BaseAdapter)mDrawerList.getAdapter()).notifyDataSetChanged();
 				return true;
 			case R.id.action_settings:
 				return true;
@@ -131,4 +143,12 @@ public class MainActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		currentChecklist = (Checklist) mDrawerList.getAdapter().getItem(position);
+		checkListView.setAdapter(new ChecklistAdapter(this,currentChecklist));
+		mDrawerList.setItemChecked(position,true);
+		((DrawerLayout)findViewById(R.id.drawer_layout)).closeDrawer(mDrawerList);
+		getActionBar().setTitle(currentChecklist.name);
+	}
 }
