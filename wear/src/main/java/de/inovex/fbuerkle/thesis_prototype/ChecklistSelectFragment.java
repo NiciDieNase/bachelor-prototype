@@ -16,6 +16,9 @@ import android.view.ViewGroup;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.DataEvent;
+import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataItemBuffer;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Wearable;
@@ -25,7 +28,7 @@ import java.util.ArrayList;
 /**
  * Created by felix on 16/04/15.
  */
-public class ChecklistSelectFragment extends Fragment {
+public class ChecklistSelectFragment extends Fragment implements DataApi.DataListener, GoogleApiClient.ConnectionCallbacks {
 
 	private static final String TAG = "ChecklistSelectFragment";
 	OnChecklistSelectedListener mListener;
@@ -97,5 +100,25 @@ public class ChecklistSelectFragment extends Fragment {
 		} catch (ClassCastException e){
 			throw new ClassCastException(activity.toString() + " must implement OnChecklistSelectedListener.");
 		}
+	}
+
+	@Override
+	public void onDataChanged(DataEventBuffer dataEvents) {
+		for(DataEvent event:dataEvents){
+			if(event.getDataItem().getUri().getPath().startsWith("/checklists")){
+				DataMapItem mapItem = DataMapItem.fromDataItem(event.getDataItem());
+				checklistAdapter.updateStrings(mapItem.getDataMap().getStringArrayList("checklists"));
+			}
+		}
+	}
+
+	@Override
+	public void onConnected(Bundle bundle) {
+		Wearable.DataApi.addListener(mGoogleApiClient,this);
+	}
+
+	@Override
+	public void onConnectionSuspended(int i) {
+		Wearable.DataApi.removeListener(mGoogleApiClient,this);
 	}
 }

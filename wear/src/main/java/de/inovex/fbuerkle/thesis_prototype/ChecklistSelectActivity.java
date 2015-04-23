@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Wearable;
@@ -13,6 +14,7 @@ import com.google.android.gms.wearable.Wearable;
  */
 public class ChecklistSelectActivity extends Activity implements ChecklistSelectFragment.OnChecklistSelectedListener {
 
+	private static final String TAG = "ChecklistSelectActivity";
 	private GoogleApiClient mGoogleApiClient;
 	private int currentListItem;
 	private String currentChecklist;
@@ -44,5 +46,8 @@ public class ChecklistSelectActivity extends Activity implements ChecklistSelect
 	@Override
 	public void onChecklistSelected(String name) {
 		//TODO:  start checklist processing
+		Log.d(TAG, "Start checklist: " + name);
 	}
+
+
 }
