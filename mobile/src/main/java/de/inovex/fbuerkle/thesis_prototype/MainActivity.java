@@ -22,6 +22,7 @@ import com.activeandroid.query.Select;
 
 import de.inovex.fbuerkle.ChecklistManager;
 import de.inovex.fbuerkle.datamodel.Checklist;
+import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
 
 
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
@@ -40,7 +41,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		super();
 		this.currentChecklist = new Select()
 				.from(Checklist.class)
-				.where("Name = ?", "Test")
 				.executeSingle();
 
 		if (currentChecklist == null) {
@@ -59,7 +59,25 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		checkListView = (ListView) findViewById(R.id.listView);
 		ChecklistAdapter adapter = new ChecklistAdapter(this, currentChecklist);
 		checkListView.setAdapter(adapter);
-		checkListView.setOnItemClickListener(adapter);
+		checkListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+				builder.setMessage(MainActivity.this.getString(R.string.do_you_want_to_delete_this_item))
+						.setTitle(MainActivity.this.getString(R.string.confirm_delete))
+						.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								ChecklistItem item = (ChecklistItem) parent.getAdapter().getItem(position);
+								item.delete();
+								((BaseAdapter)MainActivity.this.checkListView.getAdapter()).notifyDataSetChanged();
+								// TODO delete DataItem
+							}
+						})
+						.setNegativeButton("Cancel", null);
+				builder.show();
+			}
+		});
 
 
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);

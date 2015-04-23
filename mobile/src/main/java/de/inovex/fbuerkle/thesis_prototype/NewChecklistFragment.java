@@ -17,7 +17,7 @@ import de.inovex.fbuerkle.datamodel.Checklist;
  */
 public class NewChecklistFragment extends DialogFragment {
 
-	private static final String TAG = "de.inovex.fbuerkle.thesis_prototype.NewChecklistFragment";
+	private static final String TAG = "NewChecklistFragment";
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {

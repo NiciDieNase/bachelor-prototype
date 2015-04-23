@@ -19,7 +19,7 @@ import de.inovex.fbuerkle.datamodel.Checklist;
  */
 public class ChecklistSelectAdapter extends BaseAdapter {
 
-	private final List<Checklist> checklists;
+	private List<Checklist> checklists;
 	private final Context mContext;
 
 	static class ViewHolder {
@@ -61,5 +61,12 @@ public class ChecklistSelectAdapter extends BaseAdapter {
 		}
 
 		viewHolder.nameView.setText(checklists.get(position).name);
-		return convertView;	}
+		return convertView;
+	}
+
+	@Override
+	public void notifyDataSetChanged() {
+		checklists =  new Select().from(Checklist.class).execute();
+		super.notifyDataSetChanged();
+	}
 }
