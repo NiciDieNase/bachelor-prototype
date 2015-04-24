@@ -38,6 +38,14 @@ public class ChecklistSelectFragment extends Fragment implements DataApi.DataLis
 	private Context mContext;
 	private GoogleApiClient mGoogleApiClient;
 	private ArrayList<String> checklists;
+
+
+	ChecklistSelectFragment(Context mContext, GoogleApiClient mGoogleApiClient){
+		this.mContext = mContext;
+		this.mGoogleApiClient = mGoogleApiClient;
+	};
+
+
 	private WearableListView.ClickListener mClickListener = new WearableListView.ClickListener() {
 
 		@Override
@@ -51,12 +59,6 @@ public class ChecklistSelectFragment extends Fragment implements DataApi.DataLis
 		public void onTopEmptyRegionClick() {
 
 		}
-	};
-
-
-	ChecklistSelectFragment(Context mContext, GoogleApiClient mGoogleApiClient){
-		this.mContext = mContext;
-		this.mGoogleApiClient = mGoogleApiClient;
 	};
 
 	@Nullable

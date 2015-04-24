@@ -27,16 +27,13 @@ import de.inovex.fbuerkle.datamodel.Questions.DecisionItem;
 public class ChecklistProcessActivity extends Activity implements ChecklistFragment.OnChecklistItemResultListener{
 
 	private static final int NOTIFICATION_ID = 42;
-	private boolean mBound;
 	private static final String TAG = "ChecklistActivity";
 	protected WearableStringListAdapter checklistAdapter;
+	private GoogleApiClient mGoogleApiClient;
+
 	private int currentListItem = -1;
 	List<ChecklistItem> listItems;
-
-	private String[] checklistNames;
-
-	private List<Checklist> checklists = new ArrayList<Checklist>();
-	private GoogleApiClient mGoogleApiClient;
+	private Checklist mChecklist;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,33 +55,9 @@ public class ChecklistProcessActivity extends Activity implements ChecklistFragm
 				// start new list
 			}
 		} else {
-			// Start checklist selection
-			ChecklistSelectFragment selectFragment = new ChecklistSelectFragment(this, mGoogleApiClient);
-			FragmentManager fragmentManager = getFragmentManager();
-			FragmentTransaction transaction = fragmentManager.beginTransaction();
-			transaction.replace(R.id.fragment_container, selectFragment,"fragment_container");
-			transaction.setTransition(FragmentTransaction.TRANSIT_NONE);
-			transaction.commit();
-		}
-//		this.nextFragment();
 
-//		setContentView(R.layout.activity_checklist);
-//		final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
-//		stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
-//			@Override
-//			public void onLayoutInflated(WatchViewStub stub) {
-//				WearableListView listView = (WearableListView) findViewById(R.id.wearable_list);
-//				checklistAdapter = new WearableStringListAdapter(ChecklistActivity.this);
-//				if(mBound){
-//					checklistAdapter.updateStrings(mSyncService.getChecklists());
-//				}else {
-//					Log.d(TAG,"Couldn't update list because service is not bound");
-//				}
-//				listView.setAdapter(checklistAdapter);
-//				listView.setClickListener(mClickListener);
-//				Log.i(TAG, "setting adapter and click listener");
-//			}
-//		});
+		}
+
 	}
 
 	private Fragment getNextItemFragment(){
@@ -104,7 +77,8 @@ public class ChecklistProcessActivity extends Activity implements ChecklistFragm
 	}
 
 	private void loadChecklist(String name) {
-
+		// TODO load checklist
+		// TODO load all checklist-items
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package de.inovex.fbuerkle.datamodel;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.google.android.gms.wearable.DataMap;
 
 import java.util.ArrayList;
@@ -50,4 +51,12 @@ public class Checklist extends Model{
 		map.putInt(DataKeys.length, this.items().size());
 		return map;
 	}
+
+	public static List<Checklist> getAll(){
+		return new Select()
+				.from(Checklist.class)
+				.orderBy("Name ASC")
+				.execute();
+	}
+
 }

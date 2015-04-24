@@ -19,8 +19,6 @@ public class ChecklistSelectActivity extends Activity implements ChecklistSelect
 
 	private static final String TAG = "ChecklistSelectActivity";
 	private GoogleApiClient mGoogleApiClient;
-	private int currentListItem;
-	private String currentChecklist;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -124,16 +124,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 								}
 							}
 						});
+				this.publishChecklist(currentChecklist);
 				builder.show();
 				return true;
 			case R.id.action_sync:
 				// TODO sync checklists
-				if(mBound){
-					publishListOfChecklists();
-					Toast.makeText(this,"Published List",Toast.LENGTH_SHORT).show();
-				} else {
-					Toast.makeText(this,"no sync service",Toast.LENGTH_SHORT).show();
-				}
+				publishEverything();
 				return true;
 			case R.id.action_add_checklist:
 				new NewChecklistFragment().show(getFragmentManager(), "newChecklistFragment");
@@ -143,6 +139,13 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 				return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void publishEverything() {
+		publishListOfChecklists();
+		for(Checklist list : Checklist.getAll()){
+			publishChecklist(list);
+		}
 	}
 
 	@Override
@@ -166,5 +169,18 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		PutDataRequest request = dataMap.asPutDataRequest();
 		PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleApiClient,request);
 		Log.d(TAG, "Published: " + listNames.toString());
+	}
+
+	public void publishChecklist(Checklist checklist){
+		List<ChecklistItem> checklistItems = checklist.items();
+		PutDataMapRequest checklistMap = PutDataMapRequest.create(Paths.PREFIX + Paths.CHECKLIST + checklist.name);
+		checklist.putToDataMap(checklistMap.getDataMap());
+		Wearable.DataApi.putDataItem(mGoogleApiClient, checklistMap.asPutDataRequest());
+		for(int i = 0; i < checklistItems.size(); i++){
+			PutDataMapRequest itemMap = PutDataMapRequest
+					.create(Paths.PREFIX + Paths.CHECKLIST + checklist.name + Paths.ITEMS + i);
+			checklistItems.get(i).putToDataMap(itemMap.getDataMap());
+			Wearable.DataApi.putDataItem(mGoogleApiClient, itemMap.asPutDataRequest());
+		}
 	}
 }
