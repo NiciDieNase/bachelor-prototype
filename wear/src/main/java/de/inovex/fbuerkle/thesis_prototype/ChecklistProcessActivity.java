@@ -9,16 +9,24 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.DataItemBuffer;
+import com.google.android.gms.wearable.DataMap;
+import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Wearable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.inovex.fbuerkle.DataKeys;
+import de.inovex.fbuerkle.Paths;
 import de.inovex.fbuerkle.datamodel.Checklist;
 import de.inovex.fbuerkle.datamodel.Questions.CheckItem;
 import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
@@ -34,6 +42,7 @@ public class ChecklistProcessActivity extends Activity implements ChecklistFragm
 	private int currentListItem = -1;
 	List<ChecklistItem> listItems;
 	private Checklist mChecklist;
+	private int listLenght = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,65 +53,100 @@ public class ChecklistProcessActivity extends Activity implements ChecklistFragm
 				.build();
 		mGoogleApiClient.connect();
 		setContentView(R.layout.process_checklist);
+		listItems = new ArrayList<ChecklistItem>();
 		Bundle extras = this.getIntent().getExtras();
-		if(extras != null && extras.containsKey(DataKeys.checklist)){
-			// load checklist
-			this.loadChecklist(extras.getString(DataKeys.checklist));
-			if(extras.containsKey(DataKeys.currentItem)){
+		if(extras != null && extras.containsKey(DataKeys.CHECKLIST)){
+			// load CHECKLIST
+			if(extras.containsKey(DataKeys.CURRENT_ITEM)){
 				// resume list
-				this.currentListItem = extras.getInt("currentItem");
+				this.currentListItem = extras.getInt("CURRENT_ITEM");
 			} else {
-				// start new list
+				// start at beginning
+				currentListItem = 0;
 			}
+			this.startChecklist(extras.getString(DataKeys.CHECKLIST));
 		} else {
-
+			// no list to process
+			this.finish();
 		}
 
 	}
 
-	private Fragment getNextItemFragment(){
-		if(currentListItem>=listItems.size()-1){
+	private Fragment getFragmentForItem(int item){
+		ChecklistItem checklistItem = listItems.get(item);
+		if(checklistItem == null){
 			return null;
 		} else {
-			currentListItem++;
-			if(CheckItem.class.equals(listItems.get(currentListItem).getClass())){
-				return new ChecklistItemConfirmFragment((CheckItem) listItems.get(currentListItem));
-			} else if (DecisionItem.class.equals(listItems.get(currentListItem).getClass())){
-				return new ChecklistItemDecisionFragment((DecisionItem) listItems.get(currentListItem));
+			if(CheckItem.class.equals(checklistItem.getClass())){
+				return new ChecklistItemConfirmFragment((CheckItem) checklistItem);
+			} else if (DecisionItem.class.equals(checklistItem.getClass())){
+				return new ChecklistItemDecisionFragment((DecisionItem) checklistItem);
 			} else {
-				Log.e(TAG, "Unknown Item type");
+				Log.e(TAG, "Unknown Item TYPE");
 				return null;
 			}
 		}
 	}
 
-	private void loadChecklist(String name) {
-		// TODO load checklist
-		// TODO load all checklist-items
+	private void startChecklist(final String name) {
+		String path = Paths.PREFIX + Paths.CHECKLIST + name.toLowerCase().replace(" ","");
+		Log.d(TAG, "loading: " + path);
+		Wearable.DataApi.getDataItems(mGoogleApiClient, Uri.parse("wear:" + path))
+			.setResultCallback(new ResultCallback<DataItemBuffer>() {
+				@Override
+				public void onResult(final DataItemBuffer dataItems) {
+					if(dataItems.getCount() != 0){
+						DataMapItem mapItem = DataMapItem.fromDataItem(dataItems.get(0));
+						listLenght = mapItem.getDataMap().getInt(DataKeys.LENGTH);
+						mChecklist = new Checklist(mapItem.getDataMap());
+						if(listLenght == 0){
+							finish();
+						}
+					}
+					dataItems.release();
+					loadChecklistItem(currentListItem)
+							.setResultCallback(new NextItemCallback(currentListItem));
+				}
+			});
+	}
+
+	private void nextItem(){
+		currentListItem++;
+		if( currentListItem < listLenght){
+			loadChecklistItem(currentListItem).setResultCallback(new NextItemCallback(currentListItem));
+		} else {
+			finish();
+		}
+	}
+
+	private PendingResult loadChecklistItem(final int index){
+		String itemPath = Paths.PREFIX + Paths.CHECKLIST + mChecklist.name.toLowerCase().replace(" ","") + Paths.ITEMS + index;
+		Log.d(TAG, "Loading " + itemPath);
+		return Wearable.DataApi.getDataItems(mGoogleApiClient,Uri.parse("wear:" + itemPath));
 	}
 
 	@Override
 	public void onConfirm() {
-		this.nextFragment();
+		nextItem();
 	}
 
 	@Override
 	public void onOK() {
-		this.nextFragment();
+		nextItem();
 	}
 
 	@Override
 	public void onCancel() {
-		this.nextFragment();
+		nextItem();
 	}
 
 	@Override
 	public void onValueSelected() {
-		this.nextFragment();
+		nextItem();
 	}
 
-	private void nextFragment(){
-		Fragment nextItemFragment = this.getNextItemFragment();
+	private void loadFragment(int i){
+		Fragment nextItemFragment = this.getFragmentForItem(i);
 		if(nextItemFragment != null){
 			FragmentManager fragmentManager = getFragmentManager();
 			FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -120,8 +164,8 @@ public class ChecklistProcessActivity extends Activity implements ChecklistFragm
 		super.onPause();
 		// create Notification to restart/continue
 		Intent notificationIntent = new Intent(this, ChecklistProcessActivity.class);
-		notificationIntent.putExtra(DataKeys.checklist, this.mChecklist.name);
-		notificationIntent.putExtra(DataKeys.currentItem, this.currentListItem);
+		notificationIntent.putExtra(DataKeys.CHECKLIST, this.mChecklist.name);
+		notificationIntent.putExtra(DataKeys.CURRENT_ITEM, this.currentListItem);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		Notification.Action restart = new Notification.Action(R.drawable.transparent_icon, null, pendingIntent);
 
@@ -145,11 +189,44 @@ public class ChecklistProcessActivity extends Activity implements ChecklistFragm
 	protected void onResume() {
 		super.onResume();
 		Bundle extras = this.getIntent().getExtras();
-		if(extras != null && extras.containsKey("currentItem")){
-			this.currentListItem = extras.getInt("currentItem")-1;
-			this.nextFragment();
+		if(extras != null && extras.containsKey("CURRENT_ITEM")){
+			this.currentListItem = extras.getInt("CURRENT_ITEM")-1;
+			this.loadFragment(currentListItem);
 		}
 		NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.cancel(NOTIFICATION_ID);
+	}
+
+	private class NextItemCallback implements ResultCallback<DataItemBuffer> {
+
+		private int index;
+
+		public NextItemCallback(int index){
+			this.index = index;
+		}
+
+		@Override
+		public void onResult(final DataItemBuffer dataItems) {
+			if( dataItems.getCount() > 0 ){
+					DataMap map = DataMapItem.fromDataItem(dataItems.get(0)).getDataMap();
+					switch(map.getString(DataKeys.TYPE)){
+						case DataKeys.TYPE_CHECK:
+							CheckItem checkItem = new CheckItem(map);
+							checkItem.checklist = mChecklist;
+							listItems.add(index,checkItem);
+							break;
+						case DataKeys.TYPE_DECISION:
+							DecisionItem decisionItem = new DecisionItem(map);
+							decisionItem.checklist = mChecklist;
+							listItems.add(index,decisionItem);
+							break;
+						default:
+							//unknown Type
+							throw new RuntimeException("Unknown Item-TYPE");
+					}
+				loadFragment(index);
+			}
+			dataItems.release();
+		}
 	}
 }

@@ -32,16 +32,16 @@ public class DecisionItem extends ChecklistItem {
 
 	public DecisionItem(DataMap map){
 		super(map);
-		this.greenOption = map.getString(DataKeys.greenText);
-		this.redOption = map.getString(DataKeys.redText);
+		this.greenOption = map.getString(DataKeys.GREEN_TEXT);
+		this.redOption = map.getString(DataKeys.RED_TEXT);
 	}
 
 	@Override
 	public DataMap putToDataMap(DataMap map) {
 		map = super.putToDataMap(map);
-		map.putString(DataKeys.type,"decision");
-		map.putString(DataKeys.redText,redOption);
-		map.putString(DataKeys.greenText,greenOption);
+		map.putString(DataKeys.TYPE,DataKeys.TYPE_DECISION);
+		map.putString(DataKeys.RED_TEXT,redOption);
+		map.putString(DataKeys.GREEN_TEXT,greenOption);
 		return map;
 	}
 }

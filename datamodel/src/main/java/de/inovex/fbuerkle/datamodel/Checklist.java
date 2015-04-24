@@ -31,8 +31,8 @@ public class Checklist extends Model{
 	}
 
 	public Checklist(DataMap map) {
-		this.name = map.getString(DataKeys.name);
-		this.description = map.getString(DataKeys.description);
+		this.name = map.getString(DataKeys.NAME);
+		this.description = map.getString(DataKeys.DESCRIPTION);
 	}
 
 	public List<ChecklistItem> items() {
@@ -46,9 +46,9 @@ public class Checklist extends Model{
 	}
 
 	public DataMap putToDataMap(DataMap map){
-		map.putString(DataKeys.name,name);
-		map.putString(DataKeys.description,description);
-		map.putInt(DataKeys.length, this.items().size());
+		map.putString(DataKeys.NAME,name);
+		map.putString(DataKeys.DESCRIPTION,description);
+		map.putInt(DataKeys.LENGTH, this.items().size());
 		return map;
 	}
 

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.activeandroid.query.Select;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
@@ -128,7 +129,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 				builder.show();
 				return true;
 			case R.id.action_sync:
-				// TODO sync checklists
+				// TODO sync CHECKLISTS
 				publishEverything();
 				return true;
 			case R.id.action_add_checklist:
@@ -165,7 +166,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 			listNames.add(list.name);
 		}
 		PutDataMapRequest dataMap = PutDataMapRequest.create(Paths.PREFIX + Paths.CHECKLISTS);
-		dataMap.getDataMap().putStringArrayList(DataKeys.checklists,listNames);
+		dataMap.getDataMap().putStringArrayList(DataKeys.CHECKLISTS,listNames);
 		PutDataRequest request = dataMap.asPutDataRequest();
 		PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleApiClient,request);
 		Log.d(TAG, "Published: " + listNames.toString());
@@ -173,14 +174,20 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
 	public void publishChecklist(Checklist checklist){
 		List<ChecklistItem> checklistItems = checklist.items();
-		PutDataMapRequest checklistMap = PutDataMapRequest.create(Paths.PREFIX + Paths.CHECKLIST + checklist.name);
+		PutDataMapRequest checklistMap = PutDataMapRequest.create(Paths.PREFIX + Paths.CHECKLIST + checklist.name.toLowerCase().replace(" ",""));
 		checklist.putToDataMap(checklistMap.getDataMap());
 		Wearable.DataApi.putDataItem(mGoogleApiClient, checklistMap.asPutDataRequest());
 		for(int i = 0; i < checklistItems.size(); i++){
 			PutDataMapRequest itemMap = PutDataMapRequest
-					.create(Paths.PREFIX + Paths.CHECKLIST + checklist.name + Paths.ITEMS + i);
+					.create(Paths.PREFIX + Paths.CHECKLIST + checklist.name.toLowerCase().replace(" ","") + Paths.ITEMS + i);
 			checklistItems.get(i).putToDataMap(itemMap.getDataMap());
-			Wearable.DataApi.putDataItem(mGoogleApiClient, itemMap.asPutDataRequest());
+			Wearable.DataApi.putDataItem(mGoogleApiClient, itemMap.asPutDataRequest())
+					.setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
+						@Override
+						public void onResult(DataApi.DataItemResult dataItemResult) {
+							Log.d(TAG, dataItemResult.getStatus().toString() + " " + dataItemResult.getDataItem().getUri());
+						}
+					});
 		}
 	}
 }

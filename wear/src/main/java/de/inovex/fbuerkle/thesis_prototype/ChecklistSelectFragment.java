@@ -81,7 +81,7 @@ public class ChecklistSelectFragment extends Fragment implements DataApi.DataLis
 						if (dataItems.getCount() != 0) {
 							DataMapItem mapItem = DataMapItem.fromDataItem(dataItems.get(0));
 							Log.d(TAG, "Handling DataItem: " + mapItem.getUri().toString());
-							checklists = mapItem.getDataMap().getStringArrayList("checklists");
+							checklists = mapItem.getDataMap().getStringArrayList("CHECKLISTS");
 							Log.d(TAG, "Got list: " + checklists.toString());
 							checklistAdapter.updateStrings(checklists);
 							dataItems.release();
@@ -112,7 +112,7 @@ public class ChecklistSelectFragment extends Fragment implements DataApi.DataLis
 		for(DataEvent event:dataEvents){
 			if(event.getDataItem().getUri().getPath().startsWith(Paths.PREFIX + Paths.CHECKLISTS)){
 				DataMapItem mapItem = DataMapItem.fromDataItem(event.getDataItem());
-				checklistAdapter.updateStrings(mapItem.getDataMap().getStringArrayList("checklists"));
+				checklistAdapter.updateStrings(mapItem.getDataMap().getStringArrayList("CHECKLISTS"));
 			}
 		}
 	}

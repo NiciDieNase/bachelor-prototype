@@ -30,12 +30,12 @@ public class ChecklistSelectActivity extends Activity implements ChecklistSelect
 		mGoogleApiClient.connect();
 		setContentView(R.layout.process_checklist);
 		Bundle extras = this.getIntent().getExtras();
-		if (extras != null && extras.containsKey("currentItem")&& extras.containsKey("currentChecklist")) {
+		if (extras != null && extras.containsKey("CURRENT_ITEM")&& extras.containsKey("currentChecklist")) {
 			Intent resumeChecklist = new Intent(this, ChecklistProcessActivity.class);
-			resumeChecklist.putExtra(DataKeys.checklist, extras.getString(DataKeys.checklist));
-			resumeChecklist.putExtra(DataKeys.currentItem, extras.getInt(DataKeys.currentItem));
+			resumeChecklist.putExtra(DataKeys.CHECKLIST, extras.getString(DataKeys.CHECKLIST));
+			resumeChecklist.putExtra(DataKeys.CURRENT_ITEM, extras.getInt(DataKeys.CURRENT_ITEM));
 		} else {
-			// Start checklist selection
+			// Start CHECKLIST selection
 			ChecklistSelectFragment selectFragment = new ChecklistSelectFragment(this, mGoogleApiClient);
 			FragmentManager fragmentManager = getFragmentManager();
 			FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -47,10 +47,10 @@ public class ChecklistSelectActivity extends Activity implements ChecklistSelect
 
 	@Override
 	public void onChecklistSelected(String name) {
-		//TODO:  start checklist processing
-		Log.d(TAG, "Start checklist: " + name);
+		//TODO:  start CHECKLIST processing
+		Log.d(TAG, "Start CHECKLIST: " + name);
 		Intent startChecklist = new Intent(this,ChecklistProcessActivity.class);
-		startChecklist.putExtra(DataKeys.checklist,name);
+		startChecklist.putExtra(DataKeys.CHECKLIST, name);
 		startActivity(startChecklist);
 	}
 

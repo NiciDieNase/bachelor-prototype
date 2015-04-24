@@ -40,7 +40,7 @@ public class ProcessChecklistActivity extends Activity {
 
 		setContentView(R.layout.process_checklist);
 
-		// TODO get actual checklist from Intent
+		// TODO get actual CHECKLIST from Intent
 	}
 
 }

@@ -1,7 +1,5 @@
 package de.inovex.fbuerkle.datamodel.Questions;
 
-import android.os.Parcel;
-
 import com.activeandroid.annotation.Table;
 import com.google.android.gms.wearable.DataMap;
 
@@ -17,20 +15,33 @@ public class CheckItem extends ChecklistItem {
 	public CheckItem() {
 	}
 
-	public CheckItem(String title, Checklist checklist) {
-		this.title = title;
-		this.checklist = checklist;
+	public CheckItem(String title) {
+		this(title,"", null);
 	}
 
-	public CheckItem(Parcel p) {
-		this.title = p.readString();
-		this.description = p.readString();
+	public CheckItem(String title, String description){
+		this(title, description, null);
+	}
+
+	public CheckItem(Checklist checklist) {
+		this("", "", checklist);
+	}
+
+	public CheckItem(String title, String description, Checklist list) {
+		this.title = title;
+		this.description = description;
+		this.checklist = list;
+	}
+
+
+	public CheckItem(DataMap map){
+		super(map);
 	}
 
 	@Override
 	public DataMap putToDataMap(DataMap map) {
 		super.putToDataMap(map);
-		map.putString(DataKeys.type,"check");
+		map.putString(DataKeys.TYPE,"check");
 		return map;
 	}
 }

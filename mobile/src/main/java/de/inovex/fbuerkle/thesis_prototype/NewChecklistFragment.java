@@ -42,7 +42,7 @@ public class NewChecklistFragment extends DialogFragment {
 		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				Log.d(TAG, "Canceled creation of new checklist");
+				Log.d(TAG, "Canceled creation of new CHECKLIST");
 			}
 		});
 		return builder.create();

@@ -40,14 +40,14 @@ public abstract class ChecklistItem extends Model{
 		this("", "", checklist);
 	}
 
-	public ChecklistItem(DataMap map){
-		this(map.getString(DataKeys.title), map.getString(DataKeys.description), null);
-	}
-
 	public ChecklistItem(String title, String description, Checklist list) {
 		this.title = title;
 		this.description = description;
 		this.checklist = list;
+	}
+
+	public ChecklistItem(DataMap map){
+		this(map.getString(DataKeys.TITLE), map.getString(DataKeys.DESCRIPTION), null);
 	}
 
 	@Override
@@ -60,9 +60,9 @@ public abstract class ChecklistItem extends Model{
 	}
 
 	public DataMap putToDataMap(DataMap map){
-		map.putString(DataKeys.title,title);
-		map.putString(DataKeys.description,description);
-		map.putString(DataKeys.checklist,checklist.name);
+		map.putString(DataKeys.TITLE,title);
+		map.putString(DataKeys.DESCRIPTION,description);
+		map.putString(DataKeys.CHECKLIST,checklist.name);
 		return map;
 	}
 }

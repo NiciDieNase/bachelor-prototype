@@ -28,7 +28,7 @@ public class SyncTestActivity extends Activity implements DataApi.DataListener, 
 		public void onClick(WearableListView.ViewHolder viewHolder) {
 			Log.d(TAG,"List Item clicked");
 			PendingResult<DataItemBuffer> result
-					= Wearable.DataApi.getDataItems(mGoogleApiClient, Uri.parse("wear:/checklists"));
+					= Wearable.DataApi.getDataItems(mGoogleApiClient, Uri.parse("wear:/CHECKLISTS"));
 			result.setResultCallback(new ResultCallback<DataItemBuffer>() {
 				@Override
 				public void onResult(DataItemBuffer dataItems) {

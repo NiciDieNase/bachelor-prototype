@@ -13,8 +13,8 @@
             android:name="de.inovex.fbuerkle.thesis_prototype.TestActivity"
             android:label="@string/test_app">
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN"/>-->
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+                <!--<action android:NAME="android.intent.action.MAIN"/>-->
+                <!--<category android:NAME="android.intent.category.LAUNCHER"/>-->
             <!--</intent-filter>-->
         </activity>
 
@@ -22,18 +22,18 @@
             android:name="de.inovex.fbuerkle.thesis_prototype.SyncTestActivity"
             android:label="SyncTest">
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN"/>-->
+                <!--<action android:NAME="android.intent.action.MAIN"/>-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+                <!--<category android:NAME="android.intent.category.LAUNCHER"/>-->
             <!--</intent-filter>-->
         </activity>
 
         <activity
         android:name=".ChecklistProcessActivity">
         <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN"/>-->
+                <!--<action android:NAME="android.intent.action.MAIN"/>-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+                <!--<category android:NAME="android.intent.category.LAUNCHER"/>-->
             <!--</intent-filter>-->
         </activity>
 
