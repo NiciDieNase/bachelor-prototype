@@ -13,5 +13,6 @@
         android:layout_centerVertical="true"
         android:maxWidth="200dp"
         android:padding="12dp"
+        android:background="?android:attr/activatedBackgroundIndicator"
         />
 </RelativeLayout>

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
@@ -40,6 +42,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 	private ListView mDrawerList;
 	private ListView checkListView;
 	private GoogleApiClient mGoogleApiClient;
+	private ActionBarDrawerToggle mDrawerToggle;
+	private DrawerLayout mDrawerLayout;
 
 	public MainActivity() {
 		super();
@@ -83,14 +87,50 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 			}
 		});
 
+		View view = findViewById(R.id.add_button);
+		if(view != null){
+			view.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					newItem();
+				}
+			});
+		}
+
 		this.mGoogleApiClient = new GoogleApiClient.Builder(this)
 				.addApi(Wearable.API)
 				.build();
 		mGoogleApiClient.connect();
 
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 		mDrawerList.setAdapter(new ChecklistSelectAdapter(this));
 		mDrawerList.setOnItemClickListener(this);
+		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+				R.drawable.ic_drawer,
+				R.string.drawer_open,
+				R.string.drawer_close
+		){
+			@Override
+			public void onDrawerClosed(View drawerView) {
+				super.onDrawerClosed(drawerView);
+				//getActionBar().setTitle(mTitle);
+				invalidateOptionsMenu();
+			}
+
+			@Override
+			public void onDrawerOpened(View drawerView) {
+				super.onDrawerOpened(drawerView);
+				//getActionBar().setTitle();
+				invalidateOptionsMenu();
+			}
+		};
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+//		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
 	}
 
 	@Override
@@ -102,31 +142,15 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+
 		int id = item.getItemId();
 
 		switch (id) {
 			case R.id.action_add_item:
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setTitle("Pick Item-Type")
-						.setItems(R.array.item_types, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int position) {
-								switch (position) {
-									case 0:
-										NewItemFragment cf = new NewItemFragment(ItemTypes.Check);
-										cf.show(getFragmentManager(), "NewCheckItemFragment");
-										break;
-									case 1:
-										NewItemFragment df = new NewItemFragment(ItemTypes.Decision);
-										df.show(getFragmentManager(), "NewDescisionItemFragment");
-										break;
-									default:
-										Toast.makeText(MainActivity.this, "Not Implemented", Toast.LENGTH_SHORT).show();
-								}
-							}
-						});
-				this.publishChecklist(currentChecklist);
-				builder.show();
+				newItem();
 				return true;
 			case R.id.action_sync:
 				// TODO sync CHECKLISTS
@@ -140,6 +164,30 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 				return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void newItem() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Pick Item-Type")
+				.setItems(R.array.item_types, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int position) {
+						switch (position) {
+							case 0:
+								NewItemFragment cf = new NewItemFragment(ItemTypes.Check);
+								cf.show(getFragmentManager(), "NewCheckItemFragment");
+								break;
+							case 1:
+								NewItemFragment df = new NewItemFragment(ItemTypes.Decision);
+								df.show(getFragmentManager(), "NewDescisionItemFragment");
+								break;
+							default:
+								Toast.makeText(MainActivity.this, "Not Implemented", Toast.LENGTH_SHORT).show();
+						}
+					}
+				});
+		this.publishChecklist(currentChecklist);
+		builder.show();
 	}
 
 	private void publishEverything() {

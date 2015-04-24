@@ -20,6 +20,17 @@
             android:headerDividersEnabled="false"
             android:footerDividersEnabled="false"
             />
+        <ImageButton
+            android:id="@+id/add_button"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:tint="@android:color/white"
+            android:background="@drawable/oval"
+            android:elevation="@dimen/elevation_low"
+            android:src="@android:drawable/ic_input_add"/>
     </FrameLayout>
     <!-- Drawer -->
     <include layout="@layout/sidebar"/>
