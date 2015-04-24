@@ -25,6 +25,8 @@ import com.google.android.gms.wearable.Wearable;
 
 import java.util.ArrayList;
 
+import de.inovex.fbuerkle.Paths;
+
 /**
  * Created by felix on 16/04/15.
  */
@@ -69,7 +71,8 @@ public class ChecklistSelectFragment extends Fragment implements DataApi.DataLis
 				checklistAdapter = new WearableStringListAdapter(mContext);
 				listView.setAdapter(checklistAdapter);
 				listView.setClickListener(mClickListener);
-				PendingResult<DataItemBuffer> result = Wearable.DataApi.getDataItems(mGoogleApiClient, Uri.parse("wear:/checklists/"));
+				String path = Paths.PREFIX + Paths.CHECKLISTS;
+				PendingResult<DataItemBuffer> result = Wearable.DataApi.getDataItems(mGoogleApiClient, Uri.parse("wear:" + path));
 				result.setResultCallback(new ResultCallback<DataItemBuffer>() {
 					@Override
 					public void onResult(DataItemBuffer dataItems) {
@@ -105,7 +108,7 @@ public class ChecklistSelectFragment extends Fragment implements DataApi.DataLis
 	@Override
 	public void onDataChanged(DataEventBuffer dataEvents) {
 		for(DataEvent event:dataEvents){
-			if(event.getDataItem().getUri().getPath().startsWith("/checklists")){
+			if(event.getDataItem().getUri().getPath().startsWith(Paths.PREFIX + Paths.CHECKLISTS)){
 				DataMapItem mapItem = DataMapItem.fromDataItem(event.getDataItem());
 				checklistAdapter.updateStrings(mapItem.getDataMap().getStringArrayList("checklists"));
 			}

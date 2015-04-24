@@ -4,6 +4,8 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.google.android.gms.wearable.DataMap;
 
+import de.inovex.fbuerkle.DataKeys;
+
 /**
  * Created by felix on 16.12.14.
  */
@@ -30,15 +32,16 @@ public class DecisionItem extends ChecklistItem {
 
 	public DecisionItem(DataMap map){
 		super(map);
-		this.greenOption = map.getString("greenOption");
-		this.redOption = map.getString("redOption");
+		this.greenOption = map.getString(DataKeys.greenText);
+		this.redOption = map.getString(DataKeys.redText);
 	}
 
 	@Override
 	public DataMap putToDataMap(DataMap map) {
 		map = super.putToDataMap(map);
-		map.putString("redOption",redOption);
-		map.putString("greenOption",greenOption);
+		map.putString(DataKeys.type,"decision");
+		map.putString(DataKeys.redText,redOption);
+		map.putString(DataKeys.greenText,greenOption);
 		return map;
 	}
 }

@@ -25,15 +25,15 @@ import com.google.android.gms.wearable.Wearable;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.inovex.fbuerkle.DataKeys;
+import de.inovex.fbuerkle.Paths;
 import de.inovex.fbuerkle.datamodel.Checklist;
 import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
 
 
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 
-	private boolean mBound;
-
-	private static final String TAG = "de.inovex.fbuerkle.checklist";
+	private static final String TAG = "MainActivity";
 
 	public Checklist currentChecklist;
 	private ListView mDrawerList;
@@ -154,14 +154,15 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		getActionBar().setTitle(currentChecklist.name);
 	}
 
+
 	public void publishListOfChecklists(){
 		List<Checklist> checklists =  new Select().from(Checklist.class).execute();
 		ArrayList<String> listNames = new ArrayList<String>();
 		for(Checklist list : checklists){
 			listNames.add(list.name);
 		}
-		PutDataMapRequest dataMap = PutDataMapRequest.create("/checklists/");
-		dataMap.getDataMap().putStringArrayList("checklists",listNames);
+		PutDataMapRequest dataMap = PutDataMapRequest.create(Paths.PREFIX + Paths.CHECKLISTS);
+		dataMap.getDataMap().putStringArrayList(DataKeys.checklists,listNames);
 		PutDataRequest request = dataMap.asPutDataRequest();
 		PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleApiClient,request);
 		Log.d(TAG, "Published: " + listNames.toString());

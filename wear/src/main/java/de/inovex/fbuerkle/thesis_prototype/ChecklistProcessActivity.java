@@ -16,9 +16,9 @@ import android.util.Log;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Wearable;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import de.inovex.fbuerkle.DataKeys;
 import de.inovex.fbuerkle.datamodel.Checklist;
 import de.inovex.fbuerkle.datamodel.Questions.CheckItem;
 import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
@@ -48,8 +48,15 @@ public class ChecklistProcessActivity extends Activity implements ChecklistFragm
 		mGoogleApiClient.connect();
 		setContentView(R.layout.process_checklist);
 		Bundle extras = this.getIntent().getExtras();
-		if(extras != null && extras.containsKey("currentItem")){
-			this.currentListItem = extras.getInt("currentItem");
+		if(extras != null && extras.containsKey(DataKeys.checklist)){
+			// load checklist
+			this.loadChecklist(extras.getString(DataKeys.checklist));
+			if(extras.containsKey(DataKeys.currentItem)){
+				// resume list
+				this.currentListItem = extras.getInt("currentItem");
+			} else {
+				// start new list
+			}
 		} else {
 			// Start checklist selection
 			ChecklistSelectFragment selectFragment = new ChecklistSelectFragment(this, mGoogleApiClient);
@@ -139,7 +146,8 @@ public class ChecklistProcessActivity extends Activity implements ChecklistFragm
 		super.onPause();
 		// create Notification to restart/continue
 		Intent notificationIntent = new Intent(this, ChecklistProcessActivity.class);
-		notificationIntent.putExtra("currentItem", this.currentListItem);
+		notificationIntent.putExtra(DataKeys.checklist, this.mChecklist.name);
+		notificationIntent.putExtra(DataKeys.currentItem, this.currentListItem);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		Notification.Action restart = new Notification.Action(R.drawable.transparent_icon, null, pendingIntent);
 

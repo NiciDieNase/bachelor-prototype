@@ -3,7 +3,9 @@ package de.inovex.fbuerkle.datamodel.Questions;
 import android.os.Parcel;
 
 import com.activeandroid.annotation.Table;
+import com.google.android.gms.wearable.DataMap;
 
+import de.inovex.fbuerkle.DataKeys;
 import de.inovex.fbuerkle.datamodel.Checklist;
 
 /**
@@ -23,5 +25,12 @@ public class CheckItem extends ChecklistItem {
 	public CheckItem(Parcel p) {
 		this.title = p.readString();
 		this.description = p.readString();
+	}
+
+	@Override
+	public DataMap putToDataMap(DataMap map) {
+		super.putToDataMap(map);
+		map.putString(DataKeys.type,"check");
+		return map;
 	}
 }

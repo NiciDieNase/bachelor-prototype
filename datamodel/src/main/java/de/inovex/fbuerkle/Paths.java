@@ -6,4 +6,6 @@ package de.inovex.fbuerkle;
 public class Paths {
 	public static final String PREFIX = "/de.inovex/checklist/";
 	public static final String CHECKLISTS = "checklists";
+	public static final String CHECKLIST = "checklist/";
+	public static final String ITEMS = "/items";
 }

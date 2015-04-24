@@ -8,6 +8,7 @@ import com.google.android.gms.wearable.DataMap;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.inovex.fbuerkle.DataKeys;
 import de.inovex.fbuerkle.datamodel.Questions.CheckItem;
 import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
 import de.inovex.fbuerkle.datamodel.Questions.DecisionItem;
@@ -29,8 +30,8 @@ public class Checklist extends Model{
 	}
 
 	public Checklist(DataMap map) {
-		this.name = map.getString("name");
-		this.description = map.getString("description");
+		this.name = map.getString(DataKeys.name);
+		this.description = map.getString(DataKeys.description);
 	}
 
 	public List<ChecklistItem> items() {
@@ -44,8 +45,9 @@ public class Checklist extends Model{
 	}
 
 	public DataMap putToDataMap(DataMap map){
-		map.putString("name",name);
-		map.putString("description",description);
+		map.putString(DataKeys.name,name);
+		map.putString(DataKeys.description,description);
+		map.putInt(DataKeys.length, this.items().size());
 		return map;
 	}
 }
