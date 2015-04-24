@@ -2,14 +2,10 @@ package de.inovex.fbuerkle.thesis_prototype;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,8 +15,16 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.activeandroid.query.Select;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
 
-import de.inovex.fbuerkle.ChecklistManager;
+import java.util.ArrayList;
+import java.util.List;
+
 import de.inovex.fbuerkle.datamodel.Checklist;
 import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
 
@@ -31,11 +35,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
 	private static final String TAG = "de.inovex.fbuerkle.checklist";
 
-	protected ChecklistManager mSyncService;
-
 	public Checklist currentChecklist;
 	private ListView mDrawerList;
 	private ListView checkListView;
+	private GoogleApiClient mGoogleApiClient;
 
 	public MainActivity() {
 		super();
@@ -79,6 +82,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 			}
 		});
 
+		this.mGoogleApiClient = new GoogleApiClient.Builder(this)
+				.addApi(Wearable.API)
+				.build();
+		mGoogleApiClient.connect();
 
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 		mDrawerList.setAdapter(new ChecklistSelectAdapter(this));
@@ -86,33 +93,11 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 	}
 
 	@Override
-	protected void onStart() {
-		super.onStart();
-		Intent i = new Intent(this, ChecklistManager.class);
-		bindService(i,mConnection, Context.BIND_AUTO_CREATE);
-//		startService(i);
-	}
-
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_main, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-	private ServiceConnection mConnection = new ServiceConnection() {
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			ChecklistManager.SyncBinder binder = (ChecklistManager.SyncBinder) service;
-			mSyncService = binder.getService();
-			mBound = true;
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			mBound = false;
-		}
-	};
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -144,8 +129,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 			case R.id.action_sync:
 				// TODO sync checklists
 				if(mBound){
-//					mSyncService.syncChecklist(currentChecklist);
-					mSyncService.publishListOfChecklists();
+					publishListOfChecklists();
 					Toast.makeText(this,"Published List",Toast.LENGTH_SHORT).show();
 				} else {
 					Toast.makeText(this,"no sync service",Toast.LENGTH_SHORT).show();
@@ -168,5 +152,18 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		mDrawerList.setItemChecked(position,true);
 		((DrawerLayout)findViewById(R.id.drawer_layout)).closeDrawer(mDrawerList);
 		getActionBar().setTitle(currentChecklist.name);
+	}
+
+	public void publishListOfChecklists(){
+		List<Checklist> checklists =  new Select().from(Checklist.class).execute();
+		ArrayList<String> listNames = new ArrayList<String>();
+		for(Checklist list : checklists){
+			listNames.add(list.name);
+		}
+		PutDataMapRequest dataMap = PutDataMapRequest.create("/checklists/");
+		dataMap.getDataMap().putStringArrayList("checklists",listNames);
+		PutDataRequest request = dataMap.asPutDataRequest();
+		PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleApiClient,request);
+		Log.d(TAG, "Published: " + listNames.toString());
 	}
 }

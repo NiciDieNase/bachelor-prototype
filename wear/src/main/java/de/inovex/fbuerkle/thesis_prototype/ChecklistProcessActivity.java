@@ -7,12 +7,9 @@ import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
@@ -22,7 +19,6 @@ import com.google.android.gms.wearable.Wearable;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.inovex.fbuerkle.ChecklistManager;
 import de.inovex.fbuerkle.datamodel.Checklist;
 import de.inovex.fbuerkle.datamodel.Questions.CheckItem;
 import de.inovex.fbuerkle.datamodel.Questions.ChecklistItem;
@@ -33,7 +29,6 @@ public class ChecklistProcessActivity extends Activity implements ChecklistFragm
 	private static final int NOTIFICATION_ID = 42;
 	private boolean mBound;
 	private static final String TAG = "ChecklistActivity";
-	private ChecklistManager mSyncService;
 	protected WearableStringListAdapter checklistAdapter;
 	private int currentListItem = -1;
 	List<ChecklistItem> listItems;
@@ -84,37 +79,6 @@ public class ChecklistProcessActivity extends Activity implements ChecklistFragm
 //			}
 //		});
 	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-//		Intent i = new Intent(this, ChecklistManager.class);
-//		bindService(i,mConnection,Context.BIND_AUTO_CREATE);
-	}
-
-//	@Override
-//	protected void onStop() {
-//		super.onStop();
-//		if(mBound){
-//			unbindService(mConnection);
-//			mBound = false;
-//		}
-//	}
-
-
-	private ServiceConnection mConnection = new ServiceConnection() {
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			ChecklistManager.SyncBinder binder = (ChecklistManager.SyncBinder) service;
-			mSyncService = binder.getService();
-			mBound = true;
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			mBound = false;
-		}
-	};
 
 	private Fragment getNextItemFragment(){
 		if(currentListItem>=listItems.size()-1){
