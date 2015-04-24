@@ -12,5 +12,5 @@
     android:paddingBottom="@dimen/list_vertical_padding"
     android:paddingTop="@dimen/list_vertical_padding"
     android:scrollbarStyle="outsideOverlay"
-    tools:background="@android:color/white"
+    android:background="?android:attr/activatedBackgroundIndicator"
     tools:showIn="@layout/activity_main"/>

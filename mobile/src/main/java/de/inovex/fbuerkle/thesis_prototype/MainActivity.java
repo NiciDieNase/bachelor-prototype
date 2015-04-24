@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,8 +42,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 	private ListView mDrawerList;
 	private ListView checkListView;
 	private GoogleApiClient mGoogleApiClient;
-	private ActionBarDrawerToggle mDrawerToggle;
 	private DrawerLayout mDrawerLayout;
+	private ActionBarDrawerToggle mDrawerToggle;
 
 	public MainActivity() {
 		super();
@@ -109,7 +109,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-				R.drawable.ic_drawer,
 				R.string.drawer_open,
 				R.string.drawer_close
 		){
@@ -128,11 +127,17 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		mDrawerToggle.setDrawerIndicatorEnabled(true);
 
-//		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 	}
 
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		mDrawerToggle.syncState();
+}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
