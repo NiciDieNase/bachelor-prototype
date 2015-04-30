@@ -25,6 +25,7 @@ import com.google.android.gms.wearable.Wearable;
 
 import java.util.ArrayList;
 
+import de.inovex.fbuerkle.DataKeys;
 import de.inovex.fbuerkle.Paths;
 
 /**
@@ -43,6 +44,9 @@ public class ChecklistSelectFragment extends Fragment implements DataApi.DataLis
 	ChecklistSelectFragment(Context mContext, GoogleApiClient mGoogleApiClient){
 		this.mContext = mContext;
 		this.mGoogleApiClient = mGoogleApiClient;
+		if(!mGoogleApiClient.isConnected() && !mGoogleApiClient.isConnecting()){
+			mGoogleApiClient.connect();
+		}
 	};
 
 
@@ -52,7 +56,11 @@ public class ChecklistSelectFragment extends Fragment implements DataApi.DataLis
 		public void onClick(WearableListView.ViewHolder viewHolder) {
 			int i = (int) viewHolder.itemView.getTag();
 			Log.d(TAG, "Item clicked: " + i);
-			mListener.onChecklistSelected(checklists.get(i));
+
+			ArrayList<String> list = checklists;
+			if(list != null){
+				mListener.onChecklistSelected(list.get(i));
+			}
 		}
 
 		@Override
@@ -81,9 +89,11 @@ public class ChecklistSelectFragment extends Fragment implements DataApi.DataLis
 						if (dataItems.getCount() != 0) {
 							DataMapItem mapItem = DataMapItem.fromDataItem(dataItems.get(0));
 							Log.d(TAG, "Handling DataItem: " + mapItem.getUri().toString());
-							checklists = mapItem.getDataMap().getStringArrayList("CHECKLISTS");
-							Log.d(TAG, "Got list: " + checklists.toString());
-							checklistAdapter.updateStrings(checklists);
+							if(mapItem.getDataMap().containsKey(DataKeys.CHECKLISTS)){
+								checklists = mapItem.getDataMap().getStringArrayList(DataKeys.CHECKLISTS);
+								Log.d(TAG, "Got list: " + checklists.toString());
+								checklistAdapter.updateStrings(checklists);
+							}
 							dataItems.release();
 						}
 					}
