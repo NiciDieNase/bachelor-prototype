@@ -222,7 +222,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		dataMap.getDataMap().putStringArrayList(DataKeys.CHECKLISTS,listNames);
 		PutDataRequest request = dataMap.asPutDataRequest();
 		PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleApiClient,request);
-		Log.d(TAG, "Published: " + listNames.toString());
+		pendingResult.setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
+			@Override
+			public void onResult(DataApi.DataItemResult dataItemResult) {
+				Log.d(TAG, dataItemResult.getStatus().toString() + " " + dataItemResult.getDataItem().getUri());
+			}
+		});
 	}
 
 	public void publishChecklist(Checklist checklist){

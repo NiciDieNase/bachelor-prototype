@@ -163,7 +163,7 @@ public class ChecklistProcessActivity extends Activity implements ChecklistFragm
 	protected void onPause() {
 		super.onPause();
 		// create Notification to restart/continue
-		Intent notificationIntent = new Intent(this, ChecklistProcessActivity.class);
+		Intent notificationIntent = new Intent(this, ChecklistSelectActivity.class);
 		notificationIntent.putExtra(DataKeys.CHECKLIST, this.mChecklist.name);
 		notificationIntent.putExtra(DataKeys.CURRENT_ITEM, this.currentListItem);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
