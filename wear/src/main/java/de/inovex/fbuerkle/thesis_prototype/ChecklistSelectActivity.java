@@ -30,29 +30,39 @@ public class ChecklistSelectActivity extends Activity implements ChecklistSelect
 		mGoogleApiClient.connect();
 		setContentView(R.layout.process_checklist);
 		Bundle extras = this.getIntent().getExtras();
-		if (extras != null && extras.containsKey("CURRENT_ITEM")&& extras.containsKey("currentChecklist")) {
-			Intent resumeChecklist = new Intent(this, ChecklistProcessActivity.class);
-			resumeChecklist.putExtra(DataKeys.CHECKLIST, extras.getString(DataKeys.CHECKLIST));
-			resumeChecklist.putExtra(DataKeys.CURRENT_ITEM, extras.getInt(DataKeys.CURRENT_ITEM));
+		startChecklistSelection();
+		if (extras != null && extras.containsKey(DataKeys.CURRENT_ITEM)&& extras.containsKey(DataKeys.CHECKLIST)) {
+			startChecklist(extras.getString(DataKeys.CHECKLIST),extras.getInt(DataKeys.CURRENT_ITEM));
 		} else {
 			// Start CHECKLIST selection
-			ChecklistSelectFragment selectFragment = new ChecklistSelectFragment(this, mGoogleApiClient);
-			FragmentManager fragmentManager = getFragmentManager();
-			FragmentTransaction transaction = fragmentManager.beginTransaction();
-			transaction.replace(R.id.fragment_container, selectFragment, "fragment_container");
-			transaction.setTransition(FragmentTransaction.TRANSIT_NONE);
-			transaction.commit();
 		}
+	}
+
+	private void startChecklistSelection() {
+		ChecklistSelectFragment selectFragment = new ChecklistSelectFragment(this, mGoogleApiClient);
+		FragmentManager fragmentManager = getFragmentManager();
+		FragmentTransaction transaction = fragmentManager.beginTransaction();
+		transaction.replace(R.id.fragment_container, selectFragment, "fragment_container");
+		transaction.setTransition(FragmentTransaction.TRANSIT_NONE);
+		transaction.commit();
 	}
 
 	@Override
 	public void onChecklistSelected(String name) {
-		//TODO:  start CHECKLIST processing
+		startChecklist(name, -1);
+	}
+
+	private void startChecklist(String name, int index) {
 		Log.d(TAG, "Start CHECKLIST: " + name);
 		Intent startChecklist = new Intent(this,ChecklistProcessActivity.class);
 		startChecklist.putExtra(DataKeys.CHECKLIST, name);
+		startChecklist.putExtra(DataKeys.CURRENT_ITEM, index);
 		startActivity(startChecklist);
 	}
 
-
+	@Override
+	protected void onResume() {
+		super.onResume();
+//		startChecklistSelection();
+	}
 }

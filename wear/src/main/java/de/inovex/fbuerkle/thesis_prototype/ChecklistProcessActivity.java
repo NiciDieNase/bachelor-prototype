@@ -165,12 +165,12 @@ public class ChecklistProcessActivity extends Activity implements ChecklistFragm
 		// create Notification to restart/continue
 		Intent notificationIntent = new Intent(this, ChecklistSelectActivity.class);
 		notificationIntent.putExtra(DataKeys.CHECKLIST, this.mChecklist.name);
-		notificationIntent.putExtra(DataKeys.CURRENT_ITEM, this.currentListItem);
+		notificationIntent.putExtra(DataKeys.CURRENT_ITEM, this.currentListItem+1);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		Notification.Action restart = new Notification.Action(R.drawable.transparent_icon, null, pendingIntent);
 
 		Notification.Builder builder = new Notification.Builder(this)
-				.setContentTitle("Checklist")
+				.setContentTitle(mChecklist.name)
 				.setContentText("continue")
 				.setSmallIcon(R.drawable.transparent_icon)
 				.addAction(restart)
