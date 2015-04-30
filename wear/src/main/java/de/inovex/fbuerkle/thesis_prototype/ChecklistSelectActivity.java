@@ -25,7 +25,6 @@ public class ChecklistSelectActivity extends Activity implements ChecklistSelect
 		super.onCreate(savedInstanceState);
 		this.mGoogleApiClient = new GoogleApiClient.Builder(this)
 				.addApi(Wearable.API)
-//				.addConnectionCallbacks(this)
 				.build();
 		mGoogleApiClient.connect();
 		setContentView(R.layout.process_checklist);
@@ -33,8 +32,6 @@ public class ChecklistSelectActivity extends Activity implements ChecklistSelect
 		startChecklistSelection();
 		if (extras != null && extras.containsKey(DataKeys.CURRENT_ITEM)&& extras.containsKey(DataKeys.CHECKLIST)) {
 			startChecklist(extras.getString(DataKeys.CHECKLIST),extras.getInt(DataKeys.CURRENT_ITEM));
-		} else {
-			// Start CHECKLIST selection
 		}
 	}
 
@@ -56,13 +53,9 @@ public class ChecklistSelectActivity extends Activity implements ChecklistSelect
 		Log.d(TAG, "Start CHECKLIST: " + name);
 		Intent startChecklist = new Intent(this,ChecklistProcessActivity.class);
 		startChecklist.putExtra(DataKeys.CHECKLIST, name);
-		startChecklist.putExtra(DataKeys.CURRENT_ITEM, index);
+		if(index >= 0){
+			startChecklist.putExtra(DataKeys.CURRENT_ITEM, index);
+		}
 		startActivity(startChecklist);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-//		startChecklistSelection();
 	}
 }

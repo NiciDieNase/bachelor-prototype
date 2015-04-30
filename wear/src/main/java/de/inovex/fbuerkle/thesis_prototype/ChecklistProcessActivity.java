@@ -7,11 +7,9 @@ import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -43,13 +41,13 @@ public class ChecklistProcessActivity extends Activity implements ChecklistFragm
 	List<ChecklistItem> listItems;
 	private Checklist mChecklist;
 	private int listLenght = -1;
+	private boolean done = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.mGoogleApiClient = new GoogleApiClient.Builder(this)
 				.addApi(Wearable.API)
-//				.addConnectionCallbacks(this)
 				.build();
 		mGoogleApiClient.connect();
 		setContentView(R.layout.process_checklist);
@@ -59,7 +57,7 @@ public class ChecklistProcessActivity extends Activity implements ChecklistFragm
 			// load CHECKLIST
 			if(extras.containsKey(DataKeys.CURRENT_ITEM)){
 				// resume list
-				this.currentListItem = extras.getInt("CURRENT_ITEM");
+				this.currentListItem = extras.getInt(DataKeys.CURRENT_ITEM);
 			} else {
 				// start at beginning
 				currentListItem = 0;
@@ -115,6 +113,7 @@ public class ChecklistProcessActivity extends Activity implements ChecklistFragm
 		if( currentListItem < listLenght){
 			loadChecklistItem(currentListItem).setResultCallback(new NextItemCallback(currentListItem));
 		} else {
+			this.done=true;
 			finish();
 		}
 	}
@@ -154,35 +153,39 @@ public class ChecklistProcessActivity extends Activity implements ChecklistFragm
 			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 			transaction.commit();
 		} else {
+			this.done = true;
 			finish();
-//			Toast.makeText(this, "Done", Toast.LENGTH_SHORT);
 		}
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		// create Notification to restart/continue
-		Intent notificationIntent = new Intent(this, ChecklistSelectActivity.class);
-		notificationIntent.putExtra(DataKeys.CHECKLIST, this.mChecklist.name);
-		notificationIntent.putExtra(DataKeys.CURRENT_ITEM, this.currentListItem+1);
-		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		Notification.Action restart = new Notification.Action(R.drawable.transparent_icon, null, pendingIntent);
+		if(!done){
 
-		Notification.Builder builder = new Notification.Builder(this)
-				.setContentTitle(mChecklist.name)
-				.setContentText("continue")
-				.setSmallIcon(R.drawable.transparent_icon)
-				.addAction(restart)
-				.extend(new Notification.WearableExtender()
-						.setContentAction(0)
-						.setHintHideIcon(true)
-				);
+			// create Notification to restart/continue
+			Intent notificationIntent = new Intent(this, ChecklistSelectActivity.class);
+			notificationIntent.putExtra(DataKeys.CHECKLIST, this.mChecklist.name);
+			notificationIntent.putExtra(DataKeys.CURRENT_ITEM, this.currentListItem);
+			PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+			Notification.Action restart = new Notification.Action(R.drawable.transparent_icon, null, pendingIntent);
 
-		NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-		Notification notification = builder.build();
-		notification.flags &= Notification.FLAG_AUTO_CANCEL;
-		notificationManagerCompat.notify(NOTIFICATION_ID, notification);
+			Notification.Builder builder = new Notification.Builder(this)
+					.setContentTitle(mChecklist.name)
+					.setContentText("continue")
+					.setSmallIcon(R.drawable.transparent_icon)
+					.addAction(restart)
+					.setAutoCancel(true)
+					.extend(new Notification.WearableExtender()
+									.setContentAction(0)
+									.setHintHideIcon(true)
+					);
+
+			NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+			Notification notification = builder.build();
+			notification.flags &= Notification.FLAG_AUTO_CANCEL;
+			nm.notify(NOTIFICATION_ID,notification);
+		}
 	}
 
 	@Override
@@ -193,8 +196,7 @@ public class ChecklistProcessActivity extends Activity implements ChecklistFragm
 			this.currentListItem = extras.getInt("CURRENT_ITEM")-1;
 			this.loadFragment(currentListItem);
 		}
-		NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-		notificationManager.cancel(NOTIFICATION_ID);
+		((NotificationManager)getSystemService(NOTIFICATION_SERVICE)).cancelAll();
 	}
 
 	private class NextItemCallback implements ResultCallback<DataItemBuffer> {
@@ -207,6 +209,9 @@ public class ChecklistProcessActivity extends Activity implements ChecklistFragm
 
 		@Override
 		public void onResult(final DataItemBuffer dataItems) {
+			while (listItems.size()-1 < index){
+				listItems.add(null);
+			}
 			if( dataItems.getCount() > 0 ){
 					DataMap map = DataMapItem.fromDataItem(dataItems.get(0)).getDataMap();
 					switch(map.getString(DataKeys.TYPE)){
