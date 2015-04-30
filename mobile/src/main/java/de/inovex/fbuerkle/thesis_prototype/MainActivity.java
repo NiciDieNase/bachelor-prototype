@@ -122,6 +122,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
+				((ChecklistSelectAdapter)mDrawerList.getAdapter()).notifyDataSetChanged();
 				//getActionBar().setTitle();
 				invalidateOptionsMenu();
 			}
@@ -163,7 +164,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 				return true;
 			case R.id.action_add_checklist:
 				new NewChecklistFragment().show(getFragmentManager(), "newChecklistFragment");
-				((BaseAdapter)mDrawerList.getAdapter()).notifyDataSetChanged();
 				return true;
 			case R.id.action_settings:
 				return true;
