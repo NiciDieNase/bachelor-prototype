@@ -16,5 +16,4 @@ public class DataKeys {
 	public static final String CURRENT_ITEM = "currentItem";
 	public static final String TYPE_CHECK = "check";
 	public static final String TYPE_DECISION = "decision";
-
 }

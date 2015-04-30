@@ -216,7 +216,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		List<Checklist> checklists =  new Select().from(Checklist.class).execute();
 		ArrayList<String> listNames = new ArrayList<String>();
 		for(Checklist list : checklists){
-			listNames.add(list.name);
+			if(list.items().size()>0){
+				listNames.add(list.name);
+			}
 		}
 		PutDataMapRequest dataMap = PutDataMapRequest.create(Paths.PREFIX + Paths.CHECKLISTS);
 		dataMap.getDataMap().putStringArrayList(DataKeys.CHECKLISTS,listNames);
